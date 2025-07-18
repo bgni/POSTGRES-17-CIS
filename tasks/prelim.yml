@@ -99,7 +99,7 @@
   block:
       - name: "PRELIM | 6.9 | Install PostgreSQL contrib package"
         ansible.builtin.package:
-            name: postgresql12-contrib
+            name: "{{ pgs12cis_pgspackage_prefix }}-contrib"
             state: present
         when: ansible_distribution_file_variety == 'RedHat'
   when:

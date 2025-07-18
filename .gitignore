@@ -41,6 +41,7 @@ travis.env
 benchparse/
 *xccdf.xml
 *.retry
+inventory.yml
 
 # GitHub Action/Workflow files
 .github/

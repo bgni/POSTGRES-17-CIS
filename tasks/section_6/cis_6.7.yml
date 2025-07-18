@@ -3,7 +3,7 @@
 - name: "6.7 | PATCH | Ensure FIPS 140-2 OpenSSL Cryptography Is Used"
   block:
       - name: "6.7 | AUDIT | Ensure FIPS 140-2 OpenSSL Cryptography Is Used | Check for FIPS capability"
-        ansible.builtin.shell: openssl version
+        ansible.builtin.shell: openssl version -a
         changed_when: false
         failed_when: false
         register: pgs12cis_6_7_fips_capability
