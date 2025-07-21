@@ -2,3 +2,12 @@
 
 - name: "SECTION | 2.1 | Ensure the file permissions mask is correct"
   ansible.builtin.import_tasks: cis_2.1.yml
+
+- name: "SECTION | 2.2 | Ensure extension dir ownership and permissions correct"
+  ansible.builtin.import_tasks: cis_2.2.yml
+
+- name: "SECTION | 2.3 | Ensure psql comand history is disabled"
+  ansible.builtin.import_tasks: cis_2.3.yml
+
+- name: "SECTION | 2.4 | Ensure passwords are not stored in the service file"
+  ansible.builtin.import_tasks: cis_2.4.yml

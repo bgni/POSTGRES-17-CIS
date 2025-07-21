@@ -35,6 +35,8 @@ pgs17cis_rule_1_7: true
 # Directory and File Permissions
 pgs17cis_rule_2_1: true
 pgs17cis_rule_2_2: true
+pgs17cis_rule_2_3: true
+pgs17cis_rule_2_4: true
 
 # Section 3
 # Logging Monitoring and Auditing
@@ -130,9 +132,12 @@ pgs17cis_machine_uses_uefi: "{{ pgs17cis_prelim_sys_firmware_efi.stat.exists }}"
 pgs17cis_grub_cfg_path: "{{ pgs17cis_machine_uses_uefi | ternary('/boot/efi/EFI/' ~ (ansible_distribution | lower) ~ '/grub.cfg', '/boot/grub2/grub.cfg') }}"
 
 # pgs17cis_postgresql_service is the name of the PostgreSQL service.
-# The name postgresql-12 is a general default for RHEL based systems and posgresql for Ubuntu based systems
+# The name postgresql-17 is a general default for RHEL based systems and posgresql for Ubuntu based systems
 # but this allows for customization of service name if needed. There is a prelim task to set this automatically to the default name
 pgs17cis_postgresql_service: "{{ pgs17cis_postgresql_service_auto }}"
+
+# This is where the postgresql package installed binaries
+pgs17cis_pgspackage_bin_dir: "/usr/pgsql-17/bin"
 
 # Role vars - Sections
 # Section 1

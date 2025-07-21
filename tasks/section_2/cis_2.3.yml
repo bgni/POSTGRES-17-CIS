@@ -1,0 +1,28 @@
+---
+
+# Section 2
+# Directory and File Permissions
+- name: "2.3 | PATCH | Ensure psql command history is disabled"
+  block:
+      - name: "2.3 | PATCH | Ensure psql command history is disabled | Delete any .psql_history"
+        ansible.builtin.shell: 'getent passwd | cut -d: -f6 | sort -u | while read home; do if [ -f "$home/.psql_history" ]; then ln -sf /dev/null "$home/.psql_history" && echo "$home/.psql_history"; fi; done'
+        register: pgs17cis_delete_psql_history
+        changed_when: "'psql_history' in pgs17cis_delete_psql_history.stdout"
+
+      - name: "2.3 | AUDIT | Ensure psql command history is disabled | Show deleted files"
+        ansible.builtin.debug:
+            msg:
+                - "Warning!! Below files were deleted. No further action is needed"
+                - "{{ pgs17cis_delete_psql_history.stdout_lines }}"
+        when: pgs17cis_delete_psql_history.stdout_lines | length > 0
+
+      - name: "2.3 | PATCH | Ensure psql command history is disabled | Set PSQL_HISTORY to /dev/null for all users"
+        ansible.builtin.lineinfile:
+            path: /etc/environment
+            line: "PSQL_HISTORY=/dev/null"
+  when:
+      - pgs17cis_rule_2_3
+  tags:
+      - level1-postgresqlonlinux
+      - patch
+      - rule_2.3

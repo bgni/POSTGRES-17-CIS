@@ -1,5 +1,8 @@
 ---
 
+# The package prefix of all postgresql packages
+pgs17cis_pgspackage_prefix: "postgresql17"
+
 # Section 1
 # 1.1
 # get_repo_list is the list of configured repositories to ensure

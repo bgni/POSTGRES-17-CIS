@@ -1,0 +1,18 @@
+---
+
+# Section 2
+# Directory and File Permissions
+- name: "2.2 | PATCH | Ensure extension dir ownership and permissions correct"
+  block:
+      - name: "2.2 | PATCH | Ensure extension dir ownership and permissions correct | Set permissions"
+        ansible.builtin.file:
+            path: "{{ pgs17cis_pgs17_sharedir_get.stdout }}/extension"
+            mode: 0755
+            owner: root
+            group: root
+  when:
+      - pgs17cis_rule_2_2
+  tags:
+      - level1-postgresqlonlinux
+      - patch
+      - rule_2.2

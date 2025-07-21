@@ -31,7 +31,7 @@
 
 - name: "PRELIM | Set variable for service name"
   ansible.builtin.set_fact:
-      pgs17cis_postgresql_service_auto: "{{ (ansible_os_family == 'Debian') | ternary('postgresql', 'postgresql-12') }}"
+      pgs17cis_postgresql_service_auto: "{{ (ansible_os_family == 'Debian') | ternary('postgresql', 'postgresql-17') }}"
 
 - name: "PRELIM | 2.1 | Get postgresql user home folder"
   ansible.builtin.shell: "grep {{ pgs17cis_pgs17_usr }} /etc/passwd | cut -f6 -d:"
@@ -40,6 +40,12 @@
   register: pgs17cis_pgs17_usr_home_dir_get
   when:
       - pgs17cis_rule_2_1
+
+- name: "PRELIM | Get postgresql share directory"
+  ansible.builtin.shell: "{{ pgs17cis_pgspackage_bin_dir }}/pg_config --sharedir"
+  changed_when: false
+  failed_when: false
+  register: pgs17cis_pgs17_sharedir_get
 
 - name: "PRELIM | Finding the PostgreSQL Configured Data Directory (PGDATA)"
   block:
