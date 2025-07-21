@@ -8,20 +8,20 @@
         ansible.builtin.shell: "{{ get_repo_list }}"
         changed_when: false
         failed_when: false
-        register: pgs12cis_1_1_enabled_repos
+        register: pgs17cis_1_1_enabled_repos
 
       - name: "1.1 | AUDIT | Ensure packages are obtained from authorized repositories | Show repo list"
         ansible.builtin.debug:
             msg:
                 - "Warning!! Below are the enabled repo's. Please review to confirm these are authorized repositories. This is a manual task."
-                - "{{ pgs12cis_1_1_enabled_repos.stdout_lines }}"
+                - "{{ pgs17cis_1_1_enabled_repos.stdout_lines }}"
 
       - name: "1.1 | AUDIT | Ensure packages are obtained from authorized repositories | Present"
         ansible.builtin.import_tasks: warning_facts.yml
   vars:
       warn_control_id: '1.1'
   when:
-      - pgs12cis_rule_1_1
+      - pgs17cis_rule_1_1
   tags:
       - level1-postgresql
       - audit

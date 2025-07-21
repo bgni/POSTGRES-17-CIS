@@ -1,9 +1,11 @@
-# PostgresSQL 12 CIS
+# PostgresSQL 17 CIS
 
-## Configure a PostgresSQL 12 machine to be [CIS](https://www.cisecurity.org/cis-benchmarks/) compliant
+## Configure a PostgresSQL 17 machine to be [CIS](https://www.cisecurity.org/cis-benchmarks/) compliant
 
-### Based on [CIS PostgreSQL 12 Benchmark v1.1.0 - 04-28-2023](https://www.cisecurity.org/cis-benchmarks/)
+### Based on [CIS PostgreSQL 17 Benchmark v1.0.0 - 01-27-2025](https://www.cisecurity.org/cis-benchmarks/)
 
+### This repository is a fork of ansible-lockdown/POSTGRES-12-CIS
+All the below information is unchanged from the original repo.
 ---
 
 ![Org Stars](https://img.shields.io/github/stars/ansible-lockdown?label=Org%20Stars&style=social)

@@ -1,12 +1,28 @@
 ---
 
-- name: "1.2 | PATCH | Ensure systemd Service Files Are Enabled"
-  ansible.builtin.service:
-      name: "{{ pgs12cis_postgresql_service }}"
-      enabled: true
+# Section 1
+# Installation and Patches RHEL
+- name: "1.2 | AUDIT | Install only required packages"
+  block:
+      - name: "1.2 | AUDIT | Install only required packages | Get package list"
+        ansible.builtin.shell: "{{ get_installed_pgs_related_packages }}"
+        changed_when: false
+        failed_when: false
+        register: pgs17cis_1_2_installed_pgs_packages
+
+      - name: "1.2 | AUDIT | Install only required packages | Show package list"
+        ansible.builtin.debug:
+            msg:
+                - "Warning!! Below are the installed packages. Please review to confirm all are required. This is a manual task."
+                - "{{ pgs17cis_1_2_installed_pgs_packages.stdout_lines }}"
+
+      - name: "1.1 | AUDIT | Install only required packages | Present"
+        ansible.builtin.import_tasks: warning_facts.yml
+  vars:
+      warn_control_id: '1.2'
   when:
-      - pgs12cis_rule_1_2
+      - pgs17cis_rule_1_2
   tags:
-      - level1-postgresqlonlinux
-      - patch
+      - level1-postgresql
+      - audit
       - rule_1.2

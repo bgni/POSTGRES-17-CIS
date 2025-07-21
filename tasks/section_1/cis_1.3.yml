@@ -1,25 +1,11 @@
 ---
 
-- name: "1.3 | AUDIT | Ensure Data Cluster Initialized Successfully"
-  ansible.builtin.shell: "{{ pgs12cis_1_3_db_initialize }}"
-  changed_when: '"OK" in pgs12cis_1_3_db_initialize.stdout'
-  failed_when: false
-  register: pgs12cis_1_3_db_initialize
+- name: "1.3 | PATCH | Ensure systemd Service Files Are Enabled"
+  ansible.builtin.service:
+      name: "{{ pgs17cis_postgresql_service }}"
+      enabled: true
   when:
-      - pgs12cis_rule_1_3
-  tags:
-      - level1-postgresqlonlinux
-      - audit
-      - rule_1.3
-
-- name: "1.3 | PATCH | Ensure Data Cluster Initialized Successfully"
-  ansible.builtin.shell: "{{ pgs12cis_1_3_db_initialize }}"
-  changed_when: '"Success" in pgs12cis_1_3_db_initialize.stdout'
-  failed_when: false
-  become_user: "{{ pgs12cis_pgs12_usr }}"
-  register: pgs12cis_1_3_db_initialize
-  when:
-      - pgs12cis_rule_1_3
+      - pgs17cis_rule_1_3
   tags:
       - level1-postgresqlonlinux
       - patch

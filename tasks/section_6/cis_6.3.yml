@@ -6,7 +6,7 @@
         ansible.builtin.shell: psql -c "SELECT name, setting FROM pg_settings WHERE context = 'postmaster' ORDER BY 1;"
         changed_when: false
         failed_when: false
-        become_user: "{{ pgs12cis_pgs12_usr }}"
+        become_user: "{{ pgs17cis_pgs17_usr }}"
         register: pgs12cis_6_3_postmaster_runtime_param
 
       - name: "6.3 | AUDIT | Ensure 'Postmaster' Runtime Parameters are Configured | Get process output"

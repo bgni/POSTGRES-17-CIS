@@ -6,7 +6,7 @@
         ansible.builtin.shell: psql -c "SELECT nspname, proname, proargtypes, prosecdef, rolname, proconfig FROM pg_proc p JOIN pg_namespace n ON p.pronamespace = n.oid JOIN pg_authid a ON a.oid = p.proowner WHERE prosecdef OR NOT proconfig IS NULL;"
         changed_when: false
         failed_when: false
-        become_user: "{{ pgs12cis_pgs12_usr }}"
+        become_user: "{{ pgs17cis_pgs17_usr }}"
         register: pgs12cis_4_3_security_definer
 
       - name: "4.3 | AUDIT | Ensure excessive function privileges are revoked"

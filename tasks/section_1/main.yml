@@ -3,8 +3,20 @@
 - name: "SECTION | 1.1 | Ensure packages are obtained from authorized repositories"
   ansible.builtin.import_tasks: cis_1.1.yml
 
-- name: "SECTION | 1.2 | Ensure systemd Service Files Are Enabled"
+- name: "SECTION | 1.2 | Ensure only required packages are installed"
   ansible.builtin.import_tasks: cis_1.2.yml
 
-- name: "SECTION | 1.3 | Ensure Data Cluster Initialized Successfully"
+- name: "SECTION | 1.3 | Ensure systemd Service Files Are Enabled"
   ansible.builtin.import_tasks: cis_1.3.yml
+
+- name: "SECTION | 1.4 | Ensure Data Cluster Initialized Successfully"
+  ansible.builtin.import_tasks: cis_1.4.yml
+
+- name: "SECTION | 1.5 | Ensure the Latest Security Patches are Applied"
+  ansible.builtin.import_tasks: cis_1.5.yml
+
+- name: "SECTION | 1.6 | Verify That PGPASSWORD is Not Set in Users Profiles"
+  ansible.builtin.import_tasks: cis_1.6.yml
+
+- name: "SECTION | 1.7 | Verify That the PGPASSWORD Environment Variable is Not in Use"
+  ansible.builtin.import_tasks: cis_1.7.yml

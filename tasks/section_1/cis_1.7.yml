@@ -1,0 +1,30 @@
+---
+
+# Section 1
+# Installation and Patches RHEL
+- name: "1.7 | AUDIT | Verify That the PGPASSWORD Environment Variable is Not in Use"
+  block:
+      - name: "1.7 | AUDIT | Verify That the PGPASSWORD Environment Variable is Not in Use | Grep for usage"
+        ansible.builtin.shell: "grep PGPASSWORD /proc/*/environ"
+        changed_when: false
+        failed_when: false
+        register: pgs17cis_1_7_show_pgpassword_environ_usage
+
+      - name: "1.7 | AUDIT | Verify That the PGPASSWORD Environment Variable is Not in Use | Show usage"
+        ansible.builtin.debug:
+            msg:
+                - "Warning!! There are process environments containing the PGPASSWORD variable"
+                - "{{ pgs17cis_1_7_show_pgpassword_environ_usage.stderr_lines }}"
+        when: pgs17cis_1_7_show_pgpassword_environ_usage.stderr_lines | default([]) | length > 0
+
+      - name: "1.7 | AUDIT | Verify That the PGPASSWORD Environment Variable is Not in Use | Present"
+        ansible.builtin.import_tasks: warning_facts.yml
+        when: pgs17cis_1_7_show_pgpassword_environ_usage.stderr_lines | default([]) | length > 0
+  vars:
+      warn_control_id: '1.7'
+  when:
+      - pgs17cis_rule_1_7
+  tags:
+      - level1-postgresql
+      - audit
+      - rule_1.7

@@ -6,7 +6,7 @@
         ansible.builtin.shell: psql -c 'SELECT oid, relname, relrowsecurity FROM pg_class WHERE relrowsecurity IS TRUE;'
         changed_when: false
         failed_when: false
-        become_user: "{{ pgs12cis_pgs12_usr }}"
+        become_user: "{{ pgs17cis_pgs17_usr }}"
         register: pgs12cis_4_5_rls_databases
 
       - name: "4.5 | AUDIT | Ensure Row Level Security (RLS) is configured correctly | Message out"

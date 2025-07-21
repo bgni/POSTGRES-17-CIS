@@ -1,0 +1,30 @@
+---
+
+# Section 1
+# Installation and Patches RHEL
+- name: "1.6 | AUDIT | Verify That PGPASSWORD is Not Set in Users Profiles"
+  block:
+      - name: "1.6 | AUDIT | Verify That PGPASSWORD is Not Set in Users Profiles | Grep for usage"
+        ansible.builtin.shell: "grep -l PGPASSWORD --no-messages /home/*/.{bashrc,profile,bash_profile} /root/.{bashrc,profile,bash_profile} /etc/environment"
+        changed_when: false
+        failed_when: false
+        register: pgs17cis_1_6_show_pgpassword_usage
+
+      - name: "1.6 | AUDIT | Verify That PGPASSWORD is Not Set in Users Profiles | Show usage"
+        ansible.builtin.debug:
+            msg:
+                - "Warning!! There are files containing the PGPASSWORD variable"
+                - "{{ pgs17cis_1_6_show_pgpassword_usage.stdout_lines }}"
+        when: pgs17cis_1_6_show_pgpassword_usage.stdout_lines | default([]) | length > 0
+
+      - name: "1.6 | AUDIT | Verify That PGPASSWORD is Not Set in Users Profiles | Present"
+        ansible.builtin.import_tasks: warning_facts.yml
+        when: pgs17cis_1_6_show_pgpassword_usage.stdout_lines | default([]) | length > 0
+  vars:
+      warn_control_id: '1.6'
+  when:
+      - pgs17cis_rule_1_6
+  tags:
+      - level1-postgresql
+      - audit
+      - rule_1.6

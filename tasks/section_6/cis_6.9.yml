@@ -5,7 +5,7 @@
   changed_when: "'CREATE' in pgs12cis_6_9_pgcrypto_status.stdout"
   failed_when: false
   register: pgs12cis_6_9_pgcrypto_status
-  become_user: "{{ pgs12cis_pgs12_usr }}"
+  become_user: "{{ pgs17cis_pgs17_usr }}"
   when:
       - pgs12cis_rule_6_9
   tags:

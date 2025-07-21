@@ -8,13 +8,13 @@
         ansible.builtin.shell: psql -t -c "select rolname from pg_roles where rolreplication is true;" | sed -r '/^\s*$/d' | awk '{$1=$1};1'
         changed_when: false
         failed_when: false
-        become_user: "{{ pgs12cis_pgs12_usr }}"
+        become_user: "{{ pgs17cis_pgs17_usr }}"
         register: pgs12cis_7_1_replication_users
 
       - name: "7.1 | PATCH | Ensure a replication-only user is created and used for streaming replication | Create replication user"
         ansible.builtin.shell: psql -c "create user {{ pgs12cis_replication_user }} REPLICATION encrypted password '{{ pgs12cis_replication_user_pw }}';"
         failed_when: false
-        become_user: "{{ pgs12cis_pgs12_usr }}"
+        become_user: "{{ pgs17cis_pgs17_usr }}"
         when: "pgs12cis_replication_user not in pgs12cis_7_1_replication_users.stdout"
 
       - name: "7.1 | PATCH | Ensure a replication-only user is created and used for streaming replication | Create replication user pg_hba.conf entry"

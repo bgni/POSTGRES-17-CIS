@@ -6,7 +6,7 @@
         ansible.builtin.shell: psql -c "select name, setting from pg_settings where name in ('external_pid_file', 'unix_socket_directories','shared_preload_libraries','dynamic_library_path',' local_preload_libraries','session_preload_libraries');"
         changed_when: false
         failed_when: false
-        become_user: "{{ pgs12cis_pgs12_usr }}"
+        become_user: "{{ pgs17cis_pgs17_usr }}"
         register: pgs12cis_8_3_settings
 
       - name: "8.3 | AUDIT | Ensure miscellaneous configuration settings are correct | Display settings"

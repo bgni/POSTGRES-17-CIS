@@ -6,7 +6,7 @@
         ansible.builtin.shell: psql -c "SELECT name, setting FROM pg_settings WHERE context IN ('backend','superuser-backend') ORDER BY 1;"
         changed_when: false
         failed_when: false
-        become_user: "{{ pgs12cis_pgs12_usr }}"
+        become_user: "{{ pgs17cis_pgs17_usr }}"
         register: pgs12cis_6_2_backend_runtime_param
 
       - name: "6.2 | AUDIT | Ensure 'backend' runtime parameters are configured correctly | Get process output"

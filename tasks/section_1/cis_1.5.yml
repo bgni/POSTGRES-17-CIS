@@ -1,0 +1,29 @@
+---
+
+# Section 1
+# Installation and Patches RHEL
+- name: "1.5 | AUDIT | Ensure the Latest Security Patches are Applied"
+  block:
+      - name: "1.5 | AUDIT | Ensure the Latest Security Patches are Applied | Get Server Version"
+        ansible.builtin.shell: "psql -c 'SHOW server_version'"
+        changed_when: false
+        failed_when: false
+        become_user: "{{ pgs17cis_pgs17_usr }}"
+        register: pgs17cis_1_5_show_server_version
+
+      - name: "1.5 | AUDIT | Ensure the Latest Security Patches are Applied | Show Server Version"
+        ansible.builtin.debug:
+            msg:
+                - "Warning!! This is the server version. Please compare with the PostgreSQL news page. This is a manual task."
+                - "{{ pgs17cis_1_5_show_server_version.stdout_lines }}"
+
+      - name: "1.5 | AUDIT | Ensure the Latest Security Patches are Applied | Present"
+        ansible.builtin.import_tasks: warning_facts.yml
+  vars:
+      warn_control_id: '1.5'
+  when:
+      - pgs17cis_rule_1_5
+  tags:
+      - level1-postgresql
+      - audit
+      - rule_1.5

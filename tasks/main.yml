@@ -31,62 +31,64 @@
 
 - name: include OS based vars
   ansible.builtin.include_vars: "{{ ansible_os_family }}.yml"
+  tags:
+      - always
 
 - name: run Section 1 tasks
   ansible.builtin.import_tasks: section_1/main.yml
   when:
-      - pgs12cis_section1
+      - pgs17cis_section1
   tags:
-      - pgs12cis_section1
+      - pgs17cis_section1
 
 - name: run Section 2 tasks
   ansible.builtin.import_tasks: section_2/main.yml
   when:
-      - pgs12cis_section2
+      - pgs17cis_section2
   tags:
-      - pgs12cis_section2
+      - pgs17cis_section2
 
 - name: run Section 3 tasks
   ansible.builtin.import_tasks: section_3/main.yml
   when:
-      - pgs12cis_section3
+      - pgs17cis_section3
   tags:
-      - pgs12cis_section3
+      - pgs17cis_section3
 
 - name: run Section 4 tasks
   ansible.builtin.import_tasks: section_4/main.yml
   when:
-      - pgs12cis_section4
+      - pgs17cis_section4
   tags:
-      - pgs12cis_section4
+      - pgs17cis_section4
 
 - name: run Section 5 tasks
   ansible.builtin.import_tasks: section_5/main.yml
   when:
-      - pgs12cis_section5
+      - pgs17cis_section5
   tags:
-      - pgs12cis_section5
+      - pgs17cis_section5
 
 - name: run Section 6 tasks
   ansible.builtin.import_tasks: section_6/main.yml
   when:
-      - pgs12cis_section6
+      - pgs17cis_section6
   tags:
-      - pgs12cis_section6
+      - pgs17cis_section6
 
 - name: run Section 7 tasks
   ansible.builtin.import_tasks: section_7/main.yml
   when:
-      - pgs12cis_section7
+      - pgs17cis_section7
   tags:
-      - pgs12cis_section7
+      - pgs17cis_section7
 
 - name: run Section 8 tasks
   ansible.builtin.import_tasks: section_8/main.yml
   when:
-      - pgs12cis_section8
+      - pgs17cis_section8
   tags:
-      - pgs12cis_section8
+      - pgs17cis_section8
 
 - name: If Warnings found Output count and control IDs affected
   ansible.builtin.debug:

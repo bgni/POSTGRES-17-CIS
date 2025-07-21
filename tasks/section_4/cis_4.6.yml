@@ -6,7 +6,7 @@
         ansible.builtin.shell: psql -c "select * from pg_available_extensions where name = 'set_user';" | grep rows | tr -d '()'
         changed_when: false
         failed_when: false
-        become_user: "{{ pgs12cis_pgs12_usr }}"
+        become_user: "{{ pgs17cis_pgs17_usr }}"
         register: pgs12cis_4_6_set_user_status
 
       - name: "4.6 | AUDIT | Ensure the set_user extension is installed | Warning on not available"

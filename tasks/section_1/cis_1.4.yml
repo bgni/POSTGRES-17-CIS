@@ -1,0 +1,26 @@
+---
+
+- name: "1.4 | AUDIT | Ensure Data Cluster Initialized Successfully"
+  ansible.builtin.shell: "{{ pgs17cis_1_4_db_initialize }}"
+  changed_when: '"OK" in pgs17cis_1_4_db_initialize.stdout'
+  failed_when: false
+  register: pgs17cis_1_4_db_initialize
+  when:
+      - pgs17cis_rule_1_4
+  tags:
+      - level1-postgresqlonlinux
+      - audit
+      - rule_1.4
+
+- name: "1.4 | PATCH | Ensure Data Cluster Initialized Successfully"
+  ansible.builtin.shell: "{{ pgs17cis_1_4_db_initialize }}"
+  changed_when: '"Success" in pgs17cis_1_4_db_initialize.stdout'
+  failed_when: false
+  become_user: "{{ pgs17cis_pgs17_usr }}"
+  register: pgs17cis_1_4_db_initialize
+  when:
+      - pgs17cis_rule_1_4
+  tags:
+      - level1-postgresqlonlinux
+      - patch
+      - rule_1.4

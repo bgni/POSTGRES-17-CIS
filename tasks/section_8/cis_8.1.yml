@@ -6,7 +6,7 @@
         ansible.builtin.shell: psql -c "select name, setting from pg_settings where (name ~ '_directory$' or name ~ '_tablespace');"
         changed_when: false
         failed_when: false
-        become_user: "{{ pgs12cis_pgs12_usr }}"
+        become_user: "{{ pgs17cis_pgs17_usr }}"
         register: pgs12cis_8_1_directory_settings
 
       - name: "8.1 | AUDIT | Ensure PostgreSQL subdirectory locations are outside the data cluster | Display settings"

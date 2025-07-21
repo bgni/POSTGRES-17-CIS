@@ -1,8 +1,8 @@
 ---
 
 - name: "PRELIM | Install and Start PostgreSQL"
-  include_tasks: postgresql12_install.yml
-  when: pgs12cis_install_postgresql
+  include_tasks: postgresql17_install.yml
+  when: pgs17cis_install_postgresql
 
 - name: "PRELIM | Install ACL when needed"
   ansible.builtin.package:
@@ -18,27 +18,28 @@
   ansible.builtin.shell: psql -U postgres -c 'SHOW config_file' | tail -n+3 | head -n 1 | cut -c2-
   changed_when: false
   failed_when: false
-  become_user: "{{ pgs12cis_pgs12_usr }}"
-  register: pgs12cis_config_file_get
+  become: true
+  become_user: "{{ pgs17cis_pgs17_usr }}"
+  register: pgs17cis_config_file_get
 
 - name: "PRELIM | Get postgres config file path"
   ansible.builtin.shell: psql -U postgres -c 'SHOW hba_file' | tail -n+3 | head -n 1 | cut -c2-
   changed_when: false
   failed_when: false
-  become_user: "{{ pgs12cis_pgs12_usr }}"
-  register: pgs12cis_hba_config_file_get
+  become_user: "{{ pgs17cis_pgs17_usr }}"
+  register: pgs17cis_hba_config_file_get
 
 - name: "PRELIM | Set variable for service name"
   ansible.builtin.set_fact:
-      pgs12cis_postgresql_service_auto: "{{ (ansible_os_family == 'Debian') | ternary('postgresql', 'postgresql-12') }}"
+      pgs17cis_postgresql_service_auto: "{{ (ansible_os_family == 'Debian') | ternary('postgresql', 'postgresql-12') }}"
 
 - name: "PRELIM | 2.1 | Get postgresql user home folder"
-  ansible.builtin.shell: "grep {{ pgs12cis_pgs12_usr }} /etc/passwd | cut -f6 -d:"
+  ansible.builtin.shell: "grep {{ pgs17cis_pgs17_usr }} /etc/passwd | cut -f6 -d:"
   changed_when: false
   failed_when: false
-  register: pgs12cis_pgs12_usr_home_dir_get
+  register: pgs17cis_pgs17_usr_home_dir_get
   when:
-      - pgs12cis_rule_2_1
+      - pgs17cis_rule_2_1
 
 - name: "PRELIM | Finding the PostgreSQL Configured Data Directory (PGDATA)"
   block:
@@ -46,61 +47,61 @@
         ansible.builtin.shell: psql -c 'show data_directory' | tail -n+3 | head -n 1 | cut -c2-
         check_mode: false
         changed_when: false
-        register: pgs12cis_pgdata_cmd
+        register: pgs17cis_pgdata_cmd
         become: true
-        become_user: "{{ pgs12cis_pgs12_usr }}"
+        become_user: "{{ pgs17cis_pgs17_usr }}"
 
       - name: "PRELIM | Finding the PostgreSQL Configured Data Directory (PGDATA) | Make var easier to use"
         ansible.builtin.set_fact:
-            pgs12cis_data_folder: "{{ pgs12cis_pgdata_cmd.stdout }}"
+            pgs17cis_data_folder: "{{ pgs17cis_pgdata_cmd.stdout }}"
   when:
-      - pgs12cis_rule_3_1_2
+      - pgs17cis_rule_3_1_2
 
 - name: "PRELIM | 6.7 | Check if /boot or /boot/efi reside on separate partitions"
   ansible.builtin.shell: df --output=target /boot | tail -n 1
   changed_when: false
   check_mode: false
-  register: pgs12cis_prelim_boot_part
+  register: pgs17cis_prelim_boot_part
   when:
-      - pgs12cis_rule_6_7
+      - pgs17cis_rule_6_7
 
 - name: "PRELIM | 6.7 | Check whether machine is UEFI-based"
   ansible.builtin.stat:
       path: /sys/firmware/efi
-  register: pgs12cis_prelim_sys_firmware_efi
+  register: pgs17cis_prelim_sys_firmware_efi
   when:
-      - pgs12cis_rule_6_7
+      - pgs17cis_rule_6_7
 
 - name: "PRELIM | 6.8 | Generate Self-Signed Cert"
   block:
       - name: "PRELIM | 6.8 | Generate Self-Signed Cert | Check for existing cert"
         ansible.builtin.find:
-            paths: "{{ pgs12cis_data_folder }}"
+            paths: "{{ pgs17cis_data_folder }}"
             patterns: '*.crt,*.key'
-        become_user: "{{ pgs12cis_pgs12_usr }}"
-        register: pgs12cis_certs_status
+        become_user: "{{ pgs17cis_pgs17_usr }}"
+        register: pgs17cis_certs_status
 
       - name: "PRELIM | 6.8 | Generate Self-Signed Cert | Create self-signed certificates"
-        ansible.builtin.shell: 'openssl req -new -x509 -days 365 -nodes -text -out {{ pgs12cis_data_folder }}/server.crt -keyout {{ pgs12cis_data_folder }}/server.key -subj "/CN={{ ansible_nodename }}"'
-        when: pgs12cis_certs_status.matched == 0
+        ansible.builtin.shell: 'openssl req -new -x509 -days 365 -nodes -text -out {{ pgs17cis_data_folder }}/server.crt -keyout {{ pgs17cis_data_folder }}/server.key -subj "/CN={{ ansible_nodename }}"'
+        when: pgs17cis_certs_status.matched == 0
 
       - name: "PRELIM | 6.8 | Generate Self-Signed Cert | Set permissions on key file"
         file:
-            path: "{{ pgs12cis_data_folder }}/server.key"
+            path: "{{ pgs17cis_data_folder }}/server.key"
             mode: og-rwx
-            owner: "{{ pgs12cis_pgs12_usr }}"
-            group: "{{ pgs12cis_pgs12_usr }}"
-        when: pgs12cis_certs_status.matched == 0
+            owner: "{{ pgs17cis_pgs17_usr }}"
+            group: "{{ pgs17cis_pgs17_usr }}"
+        when: pgs17cis_certs_status.matched == 0
   when:
-      - pgs12cis_rule_6_8
-      - pgs12cis_create_selfsigned_cert
+      - pgs17cis_rule_6_8
+      - pgs17cis_create_selfsigned_cert
 
 - name: "PRELIM | 6.9 | Install PostgreSQL contrib package"
   block:
       - name: "PRELIM | 6.9 | Install PostgreSQL contrib package"
         ansible.builtin.package:
-            name: "{{ pgs12cis_pgspackage_prefix }}-contrib"
+            name: "{{ pgs17cis_pgspackage_prefix }}-contrib"
             state: present
         when: ansible_distribution_file_variety == 'RedHat'
   when:
-      - pgs12cis_rule_6_9
+      - pgs17cis_rule_6_9 | default(false)
