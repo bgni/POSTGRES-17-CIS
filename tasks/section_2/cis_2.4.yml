@@ -24,7 +24,7 @@
       - name: "2.4 | AUDIT | Ensure passwords are not stored in the service file | Show matching files"
         ansible.builtin.debug:
             msg:
-                - "Warning!! Below are the enabled repo's. Please review to confirm these are authorized repositories. This is a manual task."
+                - "Warning!! Below service files contain password entries. They should be deleted. This is a manual task."
                 - "{{ pgs17cis_2_4_pgservice_conf_pwd.stdout_lines }}"
                 - "{{ pgs17cis_2_4_pgservicefile_pwd.stdout_lines }}"
                 - "{{ pgs17cis_2_4_pgsysconfdir_pwd.stdout_lines }}"

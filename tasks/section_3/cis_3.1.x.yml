@@ -4,12 +4,12 @@
 # # Logging Monitoring and Auditing
 - name: "3.1.2 | PATCH |  Ensure the log destinations are set correctly"
   ansible.builtin.lineinfile:
-      path: "{{ pgs12cis_config_file }}"
+      path: "{{ pgs17cis_config_file }}"
       regexp: '^log_destination =|^#log_destination ='
-      line: "log_destination = '{{ pgs12cis_log_destination }}'"
+      line: "log_destination = '{{ pgs17cis_log_destination }}'"
   notify: restart postgresql
   when:
-      - pgs12cis_rule_3_1_2
+      - pgs17cis_rule_3_1_2
   tags:
       - level1-postgresql
       - level1-postgresqlonlinux
@@ -18,12 +18,12 @@
 
 - name: "3.1.3 | PATCH | Ensure the logging collector is enabled"
   ansible.builtin.lineinfile:
-      path: "{{ pgs12cis_config_file }}"
+      path: "{{ pgs17cis_config_file }}"
       regexp: '^logging_collector =|^#logging_collector ='
-      line: "logging_collector = '{{ pgs12cis_logging_collector }}'"
+      line: "logging_collector = '{{ pgs17cis_logging_collector }}'"
   notify: restart postgresql
   when:
-      - pgs12cis_rule_3_1_3
+      - pgs17cis_rule_3_1_3
   tags:
       - level1-postgresql
       - level1-postgresqlonlinux
@@ -32,12 +32,12 @@
 
 - name: "3.1.4 | PATCH | Ensure the log file destination directory is set correctly"
   ansible.builtin.lineinfile:
-      path: "{{ pgs12cis_config_file }}"
+      path: "{{ pgs17cis_config_file }}"
       regexp: '^log_directory =|^#log_directory ='
-      line: "log_directory = '{{ pgs12cis_log_directory }}'"
+      line: "log_directory = '{{ pgs17cis_log_directory }}'"
   notify: restart postgresql
   when:
-      - pgs12cis_rule_3_1_4
+      - pgs17cis_rule_3_1_4
   tags:
       - level1-postgresql
       - level1-postgresqlonlinux
@@ -46,12 +46,12 @@
 
 - name: "3.1.5 | PATCH | Ensure the filename pattern for log files is set correctly"
   ansible.builtin.lineinfile:
-      path: "{{ pgs12cis_config_file }}"
+      path: "{{ pgs17cis_config_file }}"
       regexp: '^log_filename =|^#log_filename ='
-      line: "log_filename = '{{ pgs12cis_log_filename }}'"
+      line: "log_filename = '{{ pgs17cis_log_filename }}'"
   notify: restart postgresql
   when:
-      - pgs12cis_rule_3_1_5
+      - pgs17cis_rule_3_1_5
   tags:
       - level1-postgresql
       - level1-postgresqlonlinux
@@ -60,12 +60,12 @@
 
 - name: "3.1.6 | PATCH | Ensure the log file permissions are set correctly"
   ansible.builtin.lineinfile:
-      path: "{{ pgs12cis_config_file }}"
+      path: "{{ pgs17cis_config_file }}"
       regexp: '^log_file_mode =|^#log_file_mode ='
-      line: "log_file_mode = 0{{ pgs12cis_log_file_mode }}"
+      line: "log_file_mode = 0{{ pgs17cis_log_file_mode }}"
   notify: restart postgresql
   when:
-      - pgs12cis_rule_3_1_6
+      - pgs17cis_rule_3_1_6
   tags:
       - level1-postgresql
       - level1-postgresqlonlinux
@@ -74,12 +74,12 @@
 
 - name: "3.1.7 | PATCH | Ensure 'log_truncate_on_rotation' is enabled"
   ansible.builtin.lineinfile:
-      path: "{{ pgs12cis_config_file }}"
+      path: "{{ pgs17cis_config_file }}"
       regexp: '^log_truncate_on_rotation =|^#log_truncate_on_rotation ='
-      line: "log_truncate_on_rotation = '{{ pgs12cis_log_truncate_on_rotation }}'"
+      line: "log_truncate_on_rotation = '{{ pgs17cis_log_truncate_on_rotation }}'"
   notify: restart postgresql
   when:
-      - pgs12cis_rule_3_1_7
+      - pgs17cis_rule_3_1_7
   tags:
       - level1-postgresql
       - level1-postgresqlonlinux
@@ -88,12 +88,12 @@
 
 - name: "3.1.8 | PATCH | Ensure the maximum log file lifetime is set correctly"
   ansible.builtin.lineinfile:
-      path: "{{ pgs12cis_config_file }}"
+      path: "{{ pgs17cis_config_file }}"
       regexp: '^log_rotation_age =|^#log_rotation_age ='
-      line: "log_rotation_age = '{{ pgs12cis_log_file_age }}'"
+      line: "log_rotation_age = '{{ pgs17cis_log_file_age }}'"
   notify: restart postgresql
   when:
-      - pgs12cis_rule_3_1_8
+      - pgs17cis_rule_3_1_8
   tags:
       - level1-postgresql
       - level1-postgresqlonlinux
@@ -102,12 +102,12 @@
 
 - name: "3.1.9 | PATCH | Ensure the maximum log file size is set correctly"
   ansible.builtin.lineinfile:
-      path: "{{ pgs12cis_config_file }}"
+      path: "{{ pgs17cis_config_file }}"
       regexp: '^log_rotation_size =|^#log_rotation_size ='
-      line: "log_rotation_size = '{{ pgs12cis_log_rotation_size }}'"
+      line: "log_rotation_size = '{{ pgs17cis_log_rotation_size }}'"
   notify: restart postgresql
   when:
-      - pgs12cis_rule_3_1_9
+      - pgs17cis_rule_3_1_9
   tags:
       - level1-postgresql
       - level1-postgresqlonlinux
@@ -116,12 +116,12 @@
 
 - name: "3.1.10 | PATCH | Ensure the correct syslog facility is selected"
   ansible.builtin.lineinfile:
-      path: "{{ pgs12cis_config_file }}"
+      path: "{{ pgs17cis_config_file }}"
       regexp: '^syslog_facility =|^#syslog_facility ='
-      line: "syslog_facility = '{{ pgs12cis_syslog_facility }}'"
+      line: "syslog_facility = '{{ pgs17cis_syslog_facility }}'"
   notify: restart postgresql
   when:
-      - pgs12cis_rule_3_1_10
+      - pgs17cis_rule_3_1_10
   tags:
       - level1-postgresql
       - level1-postgresqlonlinux
@@ -130,12 +130,12 @@
 
 - name: "3.1.11 | PATCH | Ensure syslog messages are not suppressed"
   ansible.builtin.lineinfile:
-      path: "{{ pgs12cis_config_file }}"
+      path: "{{ pgs17cis_config_file }}"
       regexp: '^syslog_sequence_numbers =|^#syslog_sequence_numbers ='
-      line: "syslog_sequence_numbers = '{{ pgs12cis_syslog_sequence_numbers }}'"
+      line: "syslog_sequence_numbers = '{{ pgs17cis_syslog_sequence_numbers }}'"
   notify: restart postgresql
   when:
-      - pgs12cis_rule_3_1_11
+      - pgs17cis_rule_3_1_11
   tags:
       - level1-postgresql
       - level1-postgresqlonlinux
@@ -144,12 +144,12 @@
 
 - name: "3.1.12 | PATCH | Ensure syslog messages are not lost due to size"
   ansible.builtin.lineinfile:
-      path: "{{ pgs12cis_config_file }}"
+      path: "{{ pgs17cis_config_file }}"
       regexp: '^syslog_split_messages =|^#syslog_split_messages ='
-      line: "syslog_split_messages = '{{ pgs12cis_syslog_split_messages }}'"
+      line: "syslog_split_messages = '{{ pgs17cis_syslog_split_messages }}'"
   notify: restart postgresql
   when:
-      - pgs12cis_rule_3_1_12
+      - pgs17cis_rule_3_1_12
   tags:
       - level1-postgresql
       - level1-postgresqlonlinux
@@ -158,12 +158,12 @@
 
 - name: "3.1.13 | PATCH | Ensure the program name for PostgreSQL syslog messages is correct"
   ansible.builtin.lineinfile:
-      path: "{{ pgs12cis_config_file }}"
+      path: "{{ pgs17cis_config_file }}"
       regexp: '^syslog_ident =|^#syslog_ident ='
-      line: "syslog_ident = '{{ pgs12cis_syslog_ident }}'"
+      line: "syslog_ident = '{{ pgs17cis_syslog_ident }}'"
   notify: restart postgresql
   when:
-      - pgs12cis_rule_3_1_13
+      - pgs17cis_rule_3_1_13
   tags:
       - level1-postgresql
       - level1-postgresqlonlinux
@@ -172,12 +172,12 @@
 
 - name: "3.1.14 | PATCH | Ensure the correct messages are written to the server log"
   ansible.builtin.lineinfile:
-      path: "{{ pgs12cis_config_file }}"
+      path: "{{ pgs17cis_config_file }}"
       regexp: '^log_min_messages =|^#log_min_messages ='
-      line: "log_min_messages = '{{ pgs12cis_log_min_messages }}'"
+      line: "log_min_messages = '{{ pgs17cis_log_min_messages }}'"
   notify: restart postgresql
   when:
-      - pgs12cis_rule_3_1_14
+      - pgs17cis_rule_3_1_14
   tags:
       - level1-postgresql
       - level1-postgresqlonlinux
@@ -186,12 +186,12 @@
 
 - name: "3.1.15 | PATCH | Ensure the correct SQL statements generating errors are recorded"
   ansible.builtin.lineinfile:
-      path: "{{ pgs12cis_config_file }}"
+      path: "{{ pgs17cis_config_file }}"
       regexp: '^log_min_error_statement =|^#log_min_error_statement ='
-      line: "log_min_error_statement = '{{ pgs12cis_log_min_error_statement }}'"
+      line: "log_min_error_statement = '{{ pgs17cis_log_min_error_statement }}'"
   notify: restart postgresql
   when:
-      - pgs12cis_rule_3_1_15
+      - pgs17cis_rule_3_1_15
   tags:
       - level1-postgresql
       - level1-postgresqlonlinux
@@ -200,12 +200,12 @@
 
 - name: "3.1.16 | PATCH | Ensure 'debug_print_parse' is disabled"
   ansible.builtin.lineinfile:
-      path: "{{ pgs12cis_config_file }}"
+      path: "{{ pgs17cis_config_file }}"
       regexp: '^debug_print_parse =|^#debug_print_parse ='
-      line: "debug_print_parse = '{{ pgs12cis_debug_print_parse }}'"
+      line: "debug_print_parse = '{{ pgs17cis_debug_print_parse }}'"
   notify: restart postgresql
   when:
-      - pgs12cis_rule_3_1_16
+      - pgs17cis_rule_3_1_16
   tags:
       - level1-postgresql
       - level1-postgresqlonlinux
@@ -214,12 +214,12 @@
 
 - name: "3.1.17 | PATCH | Ensure 'debug_print_rewritten' is disabled"
   ansible.builtin.lineinfile:
-      path: "{{ pgs12cis_config_file }}"
+      path: "{{ pgs17cis_config_file }}"
       regexp: '^debug_print_rewritten =|^#debug_print_rewritten ='
-      line: "debug_print_rewritten = '{{ pgs12cis_debug_print_rewritten }}'"
+      line: "debug_print_rewritten = '{{ pgs17cis_debug_print_rewritten }}'"
   notify: restart postgresql
   when:
-      - pgs12cis_rule_3_1_17
+      - pgs17cis_rule_3_1_17
   tags:
       - level1-postgresql
       - level1-postgresqlonlinux
@@ -228,12 +228,12 @@
 
 - name: "3.1.18 | PATCH | Ensure 'debug_print_plan' is disabled"
   ansible.builtin.lineinfile:
-      path: "{{ pgs12cis_config_file }}"
+      path: "{{ pgs17cis_config_file }}"
       regexp: '^debug_print_plan =|^#debug_print_plan ='
-      line: "debug_print_plan = '{{ pgs12cis_debug_print_plan }}'"
+      line: "debug_print_plan = '{{ pgs17cis_debug_print_plan }}'"
   notify: restart postgresql
   when:
-      - pgs12cis_rule_3_1_18
+      - pgs17cis_rule_3_1_18
   tags:
       - level1-postgresql
       - level1-postgresqlonlinux
@@ -242,12 +242,12 @@
 
 - name: "3.1.19 | PATCH | Ensure 'debug_pretty_print' is enabled"
   ansible.builtin.lineinfile:
-      path: "{{ pgs12cis_config_file }}"
+      path: "{{ pgs17cis_config_file }}"
       regexp: '^debug_pretty_print =|^#debug_pretty_print ='
-      line: "debug_pretty_print = '{{ pgs12cis_debug_pretty_print }}'"
+      line: "debug_pretty_print = '{{ pgs17cis_debug_pretty_print }}'"
   notify: restart postgresql
   when:
-      - pgs12cis_rule_3_1_19
+      - pgs17cis_rule_3_1_19
   tags:
       - level1-postgresql
       - level1-postgresqlonlinux
@@ -256,12 +256,12 @@
 
 - name: "3.1.20 | PATCH | Ensure 'log_connections' is enabled"
   ansible.builtin.lineinfile:
-      path: "{{ pgs12cis_config_file }}"
+      path: "{{ pgs17cis_config_file }}"
       regexp: '^log_connections =|^#log_connections ='
-      line: "log_connections = '{{ pgs12cis_log_connections }}'"
+      line: "log_connections = '{{ pgs17cis_log_connections }}'"
   notify: restart postgresql
   when:
-      - pgs12cis_rule_3_1_20
+      - pgs17cis_rule_3_1_20
   tags:
       - level1-postgresql
       - level1-postgresqlonlinux
@@ -270,12 +270,12 @@
 
 - name: "3.1.21 | PATCH | Ensure 'log_disconnections' is enabled"
   ansible.builtin.lineinfile:
-      path: "{{ pgs12cis_config_file }}"
+      path: "{{ pgs17cis_config_file }}"
       regexp: '^log_disconnections =|^#log_disconnections ='
-      line: "log_disconnections = '{{ pgs12cis_log_disconnections }}'"
+      line: "log_disconnections = '{{ pgs17cis_log_disconnections }}'"
   notify: restart postgresql
   when:
-      - pgs12cis_rule_3_1_21
+      - pgs17cis_rule_3_1_21
   tags:
       - level1-postgresql
       - level1-postgresqlonlinux
@@ -284,12 +284,12 @@
 
 - name: "3.1.22 | PATCH | Ensure 'log_error_verbosity' is set correctly"
   ansible.builtin.lineinfile:
-      path: "{{ pgs12cis_config_file }}"
+      path: "{{ pgs17cis_config_file }}"
       regexp: '^log_error_verbosity =|^#log_error_verbosity ='
-      line: "log_error_verbosity = '{{ pgs12cis_log_error_verbosity }}'"
+      line: "log_error_verbosity = '{{ pgs17cis_log_error_verbosity }}'"
   notify: restart postgresql
   when:
-      - pgs12cis_rule_3_1_22
+      - pgs17cis_rule_3_1_22
   tags:
       - level1-postgresql
       - level1-postgresqlonlinux
@@ -298,12 +298,12 @@
 
 - name: "3.1.23 | PATCH | Ensure 'log_hostname' is set correctly"
   ansible.builtin.lineinfile:
-      path: "{{ pgs12cis_config_file }}"
+      path: "{{ pgs17cis_config_file }}"
       regexp: '^log_hostname =|^#log_hostname ='
-      line: "log_hostname = '{{ pgs12cis_log_hostname }}'"
+      line: "log_hostname = '{{ pgs17cis_log_hostname }}'"
   notify: restart postgresql
   when:
-      - pgs12cis_rule_3_1_23
+      - pgs17cis_rule_3_1_23
   tags:
       - level1-postgresql
       - level1-postgresqlonlinux
@@ -312,12 +312,12 @@
 
 - name: "3.1.24 | PATCH | Ensure 'log_line_prefix' is set correctly"
   ansible.builtin.lineinfile:
-      path: "{{ pgs12cis_config_file }}"
+      path: "{{ pgs17cis_config_file }}"
       regexp: '^log_line_prefix =|^#log_line_prefix ='
-      line: "log_line_prefix = '{{ pgs12cis_log_line_prefix }}'"
+      line: "log_line_prefix = '{{ pgs17cis_log_line_prefix }}'"
   notify: restart postgresql
   when:
-      - pgs12cis_rule_3_1_24
+      - pgs17cis_rule_3_1_24
   tags:
       - level1-postgresql
       - level1-postgresqlonlinux
@@ -326,12 +326,12 @@
 
 - name: "3.1.25 | PATCH | Ensure 'log_statement' is set correctly"
   ansible.builtin.lineinfile:
-      path: "{{ pgs12cis_config_file }}"
+      path: "{{ pgs17cis_config_file }}"
       regexp: '^log_statement =|^#log_statement ='
-      line: "log_statement = '{{ pgs12cis_log_statement }}'"
+      line: "log_statement = '{{ pgs17cis_log_statement }}'"
   notify: restart postgresql
   when:
-      - pgs12cis_rule_3_1_25
+      - pgs17cis_rule_3_1_25
   tags:
       - level1-postgresql
       - level1-postgresqlonlinux
@@ -340,12 +340,12 @@
 
 - name: "3.1.26 | PATCH | Ensure 'log_timezone' is set correctly"
   ansible.builtin.lineinfile:
-      path: "{{ pgs12cis_config_file }}"
+      path: "{{ pgs17cis_config_file }}"
       regexp: '^log_timezone =|^#log_timezone ='
-      line: "log_timezone = '{{ pgs12cis_log_timezone }}'"
+      line: "log_timezone = '{{ pgs17cis_log_timezone }}'"
   notify: restart postgresql
   when:
-      - pgs12cis_rule_3_1_26
+      - pgs17cis_rule_3_1_26
   tags:
       - level1-postgresql
       - level1-postgresqlonlinux

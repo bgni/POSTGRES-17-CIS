@@ -157,7 +157,7 @@ pgs17cis_umask_value: "077"
 # pgs17cis_log_destination is the log destination configured for PostgreSQL
 # PostgreSQL supports several methods for logging server messages, including stderr, csvlog and syslog
 # One of these destinations should be et for server log output
-pgs17cis_log_destination: syslog
+pgs17cis_log_destination: stderr
 
 # 3.1.3
 # pgs17cis_logging_collector is a background process that captures log messages sent to stderr and redirects
@@ -168,7 +168,7 @@ pgs17cis_logging_collector: "on"
 # pgs17cis_log_directory is the directory logs are written to
 # The default value is log, which is relative to the clusters data directory.
 # To use absolute paths start the value with a /, /var/log/pg_log for example
-pgs17cis_log_directory: log
+pgs17cis_log_directory: /var/log/postgres
 
 # 3.1.5
 # pgs17cis_log_filename is the file name pattern for log files
@@ -218,13 +218,13 @@ pgs17cis_syslog_ident: postgres
 # pgs17cis_log_min_messages specifies the warning levels that are written to the server log.
 # Options are DEBUG5, DEBUG4, DEBUG3, DEBUG2, DEBUG1, INFO, NOTICE, WARNING, ERROR, LOG, FATAL, PANIC
 # The list above is in order from most chatty (DEBUG5) to practically mute (PANIC). The level WARNING is considered best practice unless indicated otherwise.
-pgs17cis_log_min_messages: WARNING
+pgs17cis_log_min_messages: warning
 
 # 3.1.15
 # pgs17cis_log_min_error_statement is the value the rate at which all SQL statements generating errors will be logged at
 # Options are DEBUG5, DEBUG4, DEBUG3, DEBUG2, DEBUG1, INFO, NOTICE, WARNING, ERROR, LOG, FATAL, PANIC
 # The list above are in order from most chatty (DEBUG5) to practically mute (PANIC). The level ERROR is considered best practice unless indicated otherwise.
-pgs17cis_log_min_error_statement: ERROR
+pgs17cis_log_min_error_statement: error
 
 # 3.1.16
 # pgs17cis_debug_print_parse is the program name used to disable printing the resulting parse tree for each executed query.

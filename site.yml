@@ -3,11 +3,10 @@
 - hosts: all
   become: true
   pre_tasks:
-      - name: Initialize the user deffined variables
+      - name: Initialize the user defined variables
         set_fact:
-            pgs12cis_install_postgresql: false
-            pgs12cis_pgspackage_prefix: postgresql16
-            pgs12cis_postgresql_service: postgresql-16
-            pgs12cis_3_2_pgaudit_install: pgaudit_16
+            pgs17cis_install_postgresql: false
+        tags:
+            - always
   roles:
       - role: "{{ playbook_dir }}"
