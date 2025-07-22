@@ -1,6 +1,6 @@
-# PostgresSQL 17 CIS
+# PostgreSQL 17 CIS
 
-## Configure a PostgresSQL 17 machine to be [CIS](https://www.cisecurity.org/cis-benchmarks/) compliant
+## Configure a PostgreSQL 17 machine to be [CIS](https://www.cisecurity.org/cis-benchmarks/) compliant
 
 ### Based on [CIS PostgreSQL 17 Benchmark v1.0.0 - 01-27-2025](https://www.cisecurity.org/cis-benchmarks/)
 
