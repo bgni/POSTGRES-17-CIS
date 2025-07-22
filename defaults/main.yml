@@ -76,6 +76,8 @@ pgs17cis_rule_4_4: true
 pgs17cis_rule_4_5: true
 pgs17cis_rule_4_6: true
 pgs17cis_rule_4_7: true
+pgs17cis_rule_4_8: true
+pgs17cis_rule_4_9: true
 
 # Section 5
 # Connection and Login
@@ -290,6 +292,8 @@ pgs17cis_shared_preload_libraries: pgaudit
 # The options are READ, WRITE, FUNCTION, ROLE, DDL, and MISC. You can also have multiple types listed and separated by a comma with no spaces
 # Example pgs17cis_pgaudit_log_types: ddl,write
 pgs17cis_pgaudit_log_types: ddl,write
+# pgs17cis_pgaudit_configure should be set to true if no other automatic audit setup is active
+pgs17cis_pgaudit_configure: false
 
 # Section 4
 # 4.2

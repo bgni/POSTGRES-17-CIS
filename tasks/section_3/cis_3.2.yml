@@ -4,22 +4,43 @@
   block:
       - name: "3.2 | PATCH | Ensure the PostgreSQL Audit Extension (pgAudit) is enabled | Install pgAudit"
         ansible.builtin.package:
-            name: "{{ pgs12cis_3_2_pgaudit_install }}"
+            name: "{{ pgs17cis_3_2_pgaudit_install }}"
             state: present
 
       - name: "3.2 | PATCH | Ensure the PostgreSQL Audit Extension (pgAudit) is enabled | Set pgAudit settings in postgresql.conf"
         ansible.builtin.lineinfile:
-            path: "{{ pgs12cis_config_file }}"
+            path: "{{ pgs17cis_config_file }}"
             regexp: "{{ item.regexp }}"
             line: "{{ item.line }}"
             insertafter: "{{ item.insertafter }}"
         notify: restart postgresql
         with_items:
-            - { regexp: '^shared_preload_libraries =|^#shared_preload_libraries =', line: "shared_preload_libraries = '{{ pgs12cis_shared_preload_libraries }}'", insertafter: EOF }
+            - { regexp: '^shared_preload_libraries =|^#shared_preload_libraries =', line: "shared_preload_libraries = '{{ pgs17cis_shared_preload_libraries }}'", insertafter: EOF }
             - { regexp: '^# for this example we are logging the ddl and write operations', line: '# for this example we are logging the ddl and write operations', insertafter: EOF }
-            - { regexp: '^pgaudit.log=', line: "pgaudit.log='{{ pgs12cis_pgaudit_log_types  }}'", insertafter: '# for this example we are logging the ddl and write operations'}
+            - { regexp: '^pgaudit.log=', line: "pgaudit.log='{{ pgs17cis_pgaudit_log_types  }}'", insertafter: '# for this example we are logging the ddl and write operations'}
+        when: pgs17cis_pgaudit_configure
+
+      - name: "3.2 | AUDIT | Ensure the PostgreSQL Audit Extension (pgAudit) is enabled | Check pgaudit.log enabled"
+        ansible.builtin.shell: "psql -t -c 'SHOW pgaudit.log' | head -1|cut -c2-"
+        changed_when: false
+        failed_when: false
+        become_user: "{{ pgs17cis_pgs17_usr }}"
+        register: pgs17cis_3_2_show_pgaudit_log
+
+      - name: "3.2 | AUDIT | Ensure the PostgreSQL Audit Extension (pgAudit) is enabled | Check pgaudit.log types"
+        ansible.builtin.debug:
+            msg:
+                - "Warning!! pgaudit log types needs adjusting. This is a manual task."
+                - "Requested: '{{ pgs17cis_pgaudit_log_types }}' Actual: '{{ pgs17cis_3_2_show_pgaudit_log.stdout }}'"
+        when: "pgs17cis_pgaudit_log_types not in pgs17cis_3_2_show_pgaudit_log.stdout_lines"
+
+      - name: "3.2 | AUDIT | Ensure the PostgreSQL Audit Extension (pgAudit) is enabled | Present"
+        ansible.builtin.import_tasks: warning_facts.yml
+        when: "pgs17cis_pgaudit_log_types not in pgs17cis_3_2_show_pgaudit_log.stdout_lines"
+  vars:
+      warn_control_id: '3.2'
   when:
-      - pgs12cis_rule_3_2
+      - pgs17cis_rule_3_2
   tags:
       - level1-postgresql
       - level1-postgresqlonlinux

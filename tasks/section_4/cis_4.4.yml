@@ -1,18 +1,32 @@
 ---
 
-- name: "4.4 | AUDIT | Ensure excessive DML privileges are revoked | Absent"
-  ansible.builtin.debug:
-      msg:
-          - "Warning!! Please review all users and databases to determine no users have excessive DML privileges"
-          - "If a user has excessive DML privileges that user can change or delete ifnormation without proper"
-          - "authorization and this is a finding. This is a manual task."
+# Section 4
+# User Access and Authorization
+- name: "4.4 | AUDIT | Ensure accounts not in use are locked"
+  block:
+      - name: "4.4 | AUDIT | Ensure accounts not in use are locked | Get account list"
+        ansible.builtin.shell: >-
+          psql -t -c "SELECT rolname FROM pg_catalog.pg_roles WHERE rolname !~ '^pg_'
+          AND rolname !~ '^postgres'
+          AND rolname !~ '^{{ pgs17cis_replication_user }}'
+          AND rolcanlogin"|cut -c2-
+        changed_when: false
+        failed_when: false
+        become_user: "{{ pgs17cis_pgs17_usr }}"
+        register: pgs17cis_4_4_enabled_accounts
 
-- name: "4.4 | AUDIT  | Ensure excessive DML privileges are revoked | Present"
-  ansible.builtin.import_tasks: warning_facts.yml
+      - name: "4.4 | AUDIT | Ensure accounts not in use are locked | Show repo list"
+        ansible.builtin.debug:
+            msg:
+                - "Warning!! Below are the accounts that can log in. Please review to confirm these are in use. This is a manual task."
+                - "{{ pgs17cis_4_4_enabled_accounts.stdout_lines }}"
+
+      - name: "4.4 | AUDIT | Ensure accounts not in use are locked | Present"
+        ansible.builtin.import_tasks: warning_facts.yml
   vars:
       warn_control_id: '4.4'
   when:
-      - pgs12cis_rule_4_4
+      - pgs17cis_rule_4_4
   tags:
       - level1-postgresql
       - audit

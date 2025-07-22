@@ -1,22 +1,28 @@
 ---
 
-- name: "SECTION | 4.1 | Ensure sudo is configured correctly"
+- name: "SECTION | 4.1 | Ensure interactive login is Disabled"
   ansible.builtin.import_tasks: cis_4.1.yml
 
-- name: "SECTION | 4.2 | Ensure excessive administrative privileges are revoked"
+- name: "SECTION | 4.2 | Ensure sudo is configured correctly"
   ansible.builtin.import_tasks: cis_4.2.yml
 
-- name: "SECTION | 4.3 | Ensure excessive function privileges are revoked"
+- name: "SECTION | 4.3 | Ensure excessive administrative privileges are revoked"
   ansible.builtin.import_tasks: cis_4.3.yml
 
-- name: "SECTION | 4.4 | Ensure excessive DML privileges are revoked"
+- name: "SECTION | 4.4 | Ensure accounts not in use are locked"
   ansible.builtin.import_tasks: cis_4.4.yml
 
-- name: "SECTION | 4.5 | Ensure Row Level Security (RLS) is configured correctly"
+- name: "SECTION | 4.5 | Ensure excessive function privileges are revoked"
   ansible.builtin.import_tasks: cis_4.5.yml
 
-- name: "SECTION | 4.6 | Ensure the set_user extension is installed"
+- name: "SECTION | 4.6 | Ensure excessive DML privileges are revoked"
   ansible.builtin.import_tasks: cis_4.6.yml
 
-- name: "SECTION | 4.7 | Make use of default roles"
+- name: "SECTION | 4.7 | Ensure Row Level Security (RLS) is configured correctly"
   ansible.builtin.import_tasks: cis_4.7.yml
+
+- name: "SECTION | 4.8 | Ensure the set_user extension is installed"
+  ansible.builtin.import_tasks: cis_4.8.yml
+
+- name: "SECTION | 4.9 | Make use of predefined roles"
+  ansible.builtin.import_tasks: cis_4.9.yml

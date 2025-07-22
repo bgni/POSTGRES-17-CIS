@@ -1,28 +1,31 @@
 ---
 
-- name: "4.3 | AUDIT | Ensure excessive function privileges are revoked | Absent"
+- name: "4.3 | PATCH | Ensure excessive administrative privileges are revoked"
   block:
-      - name: "4.3 | AUDIT | Ensure excessive function privileges are revoked"
-        ansible.builtin.shell: psql -c "SELECT nspname, proname, proargtypes, prosecdef, rolname, proconfig FROM pg_proc p JOIN pg_namespace n ON p.pronamespace = n.oid JOIN pg_authid a ON a.oid = p.proowner WHERE prosecdef OR NOT proconfig IS NULL;"
+      - name: "4.3 | AUDIT | Ensure excessive administrative privileges are revoked | Get list of PostgreSQL users"
+        ansible.builtin.shell: psql -t -c "SELECT usename FROM pg_user where usesuper OR usecreatedb" | sed -r -e '/^\s*$/d' -e 's/^\s*//'
         changed_when: false
         failed_when: false
         become_user: "{{ pgs17cis_pgs17_usr }}"
-        register: pgs12cis_4_3_security_definer
+        register: pgs17cis_4_3_all_postgresql_users
 
-      - name: "4.3 | AUDIT | Ensure excessive function privileges are revoked"
-        ansible.builtin.debug:
-            msg:
-                - "Warning!! Please review the list below and confirm all results should have Security Definer status. This is a manual task."
-                - "When possible revoke Security Definer, Security Invoker is another option that is valid to use."
-                - "{{ pgs12cis_4_3_security_definer.stdout_lines }}"
+      - name: "4.3 | PATCH | Ensure excessive administrative privileges are revoked | Get list of disallowed superusers"
+        ansible.builtin.set_fact:
+            pgs17cis_disallowed_superusers: "{{ pgs17cis_4_3_all_postgresql_users.stdout_lines | difference(pgs17cis_allowed_superusers) }}"
 
-      - name: "4.3 | AUDIT | Ensure excessive function privileges are revoked | Present"
-        ansible.builtin.import_tasks: warning_facts.yml
-  vars:
-      warn_control_id: '4.3'
+      - name: "4.3 | PATCH | Ensure excessive administrative privileges are revoked | Remove excessive privileges from users"
+        ansible.builtin.shell: psql -c 'alter user {{ item }} with NOSUPERUSER NOCREATEROLE NOCREATEDB NOREPLICATION NOBYPASSRLS ;'
+        become_user: "{{ pgs17cis_pgs17_usr }}"
+        with_items:
+            - "{{ pgs17cis_disallowed_superusers }}"
+
+      - name: "4.3 | PATCH | Ensure excessive administrative privileges are revoked | Allow replication user to replicate"
+        ansible.builtin.shell: psql -c 'alter user {{ pgs17cis_replication_user }} with REPLICATION;'
+        become_user: "{{ pgs17cis_pgs17_usr }}"
+        when: "pgs17cis_replication_user in pgs17cis_4_3_all_postgresql_users.stdout_lines"
   when:
-      - pgs12cis_rule_4_3
+      - pgs17cis_rule_4_3
   tags:
-      - level1-postgresqlonlinux
-      - audit
+      - level1-postgresql
+      - patch
       - rule_4.3

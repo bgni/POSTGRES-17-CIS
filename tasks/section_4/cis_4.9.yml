@@ -1,0 +1,28 @@
+---
+
+- name: "4.9 | AUDIT | Make use of predefined roles"
+  block:
+      - name: "4.9 | AUDIT | Make use of predefined roles | Get superusers"
+        ansible.builtin.shell: psql -c 'select rolname from pg_roles where rolsuper is true;'
+        changed_when: false
+        failed_when: false
+        become_user: "{{ pgs17cis_pgs17_usr }}"
+        register: pgs17cis_4_9_superusers
+
+      - name: "4.9 | AUDIT | Make use of predefined roles | Message out"
+        ansible.builtin.debug:
+            msg:
+                - "Warning!! Below are the superusers, please review and add any needed users to the superusers."
+                - "Or remove any users that should not have superuser status. This is a manual task."
+                - "{{ pgs17cis_4_9_superusers.stdout_lines }}"
+
+      - name: "4.9 | AUDIT | Make use of predefined roles | Present"
+        ansible.builtin.import_tasks: warning_facts.yml
+  vars:
+      warn_control_id: '4.9'
+  when:
+      - pgs17cis_rule_4_9
+  tags:
+      - level1-postgresql
+      - audit
+      - rule_4.9

@@ -1,28 +1,34 @@
 ---
 
-- name: "4.5 | AUDIT | Ensure Row Level Security (RLS) is configured correctly"
+- name: "4.5 | AUDIT | Ensure excessive function privileges are revoked | Absent"
   block:
-      - name: "4.5 | AUDIT | Ensure Row Level Security (RLS) is configured correctly | Get databases using RLS"
-        ansible.builtin.shell: psql -c 'SELECT oid, relname, relrowsecurity FROM pg_class WHERE relrowsecurity IS TRUE;'
+      - name: "4.5 | AUDIT | Ensure excessive function privileges are revoked | Get procs"
+        ansible.builtin.shell: >-
+            psql -c "SELECT nspname, proname, proargtypes, prosecdef, rolname, proconfig FROM pg_proc p
+            JOIN pg_namespace n ON p.pronamespace = n.oid
+            JOIN pg_authid a ON a.oid = p.proowner
+            WHERE prosecdef OR NOT proconfig IS NULL;"
         changed_when: false
         failed_when: false
         become_user: "{{ pgs17cis_pgs17_usr }}"
-        register: pgs12cis_4_5_rls_databases
+        register: pgs17cis_4_5_security_definer
 
-      - name: "4.5 | AUDIT | Ensure Row Level Security (RLS) is configured correctly | Message out"
+      - name: "4.5 | AUDIT | Ensure excessive function privileges are revoked | Show warning"
         ansible.builtin.debug:
             msg:
-                - "Warning!! You need to confirm RLS is configured correctly. This is a manual task."
-                - "Below are the tables that are using RLS"
-                - "{{ pgs12cis_4_5_rls_databases.stdout_lines }}"
+                - "Warning!! Please review the list below and confirm all results should have Security Definer status. This is a manual task."
+                - "When possible revoke Security Definer, Security Invoker is another option that is valid to use."
+                - "{{ pgs17cis_4_5_security_definer.stdout_lines }}"
+        when: pgs17cis_4_5_security_definer.stdout_lines | length > 3
 
-      - name: "4.5 | AUDIT | Ensure Row Level Security (RLS) is configured correctly | Present"
+      - name: "4.5 | AUDIT | Ensure excessive function privileges are revoked | Present"
         ansible.builtin.import_tasks: warning_facts.yml
+        when: pgs17cis_4_5_security_definer.stdout_lines | length > 3
   vars:
       warn_control_id: '4.5'
   when:
-      - pgs12cis_rule_4_5
+      - pgs17cis_rule_4_5
   tags:
-      - level1-postgresql
+      - level1-postgresqlonlinux
       - audit
       - rule_4.5
