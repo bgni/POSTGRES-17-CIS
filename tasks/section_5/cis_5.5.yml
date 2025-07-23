@@ -1,0 +1,24 @@
+---
+
+- name: "5.5 | PATCH | Ensure per-account connection limits are used"
+  block:
+      - name: "5.5 | AUDIT | Ensure per-account connection limits are used | Get list of PostgreSQL users"
+        ansible.builtin.shell: psql -t -c "SELECT rolname FROM pg_roles where NOT rolsuper AND rolname NOT LIKE 'pg_%' AND rolconnlimit = -1" | sed -r -e '/^\s*$/d' -e 's/^\s*//'
+        changed_when: false
+        failed_when: false
+        become: true
+        become_user: "{{ pgs17cis_pgs17_usr }}"
+        register: pgs17cis_5_5_all_postgresql_users
+
+      - name: "5.5 | PATCH | Ensure per-account connection limits are used | Set unlimited to default limit"
+        ansible.builtin.shell: psql -c 'alter user {{ item }} CONNECTION LIMIT {{ pgs17cis_user_connection_limit }};'
+        become: true
+        become_user: "{{ pgs17cis_pgs17_usr }}"
+        with_items:
+            - "{{ pgs17cis_5_5_all_postgresql_users.stdout_lines }}"
+  when:
+      - pgs17cis_rule_5_5
+  tags:
+      - level1-postgresql
+      - patch
+      - rule_5.5

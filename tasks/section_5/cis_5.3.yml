@@ -1,0 +1,28 @@
+---
+
+# Section 5
+# Connection and Login
+- name: "5.3 | AUDIT | Ensure login via 'local' UNIX Domain Socket is configured correctly"
+  block:
+      - name: "5.3 | AUDIT | Ensure login via 'local' UNIX Domain Socket is configured correctly | Get local entries from hba"
+        ansible.builtin.shell: "grep -E '^\\s*local' {{ pgs17cis_data_folder }}/pg_hba.conf | tr '\\t' '    '"
+        changed_when: false
+        failed_when: false
+        register: pgs17cis_5_3_hba_local
+
+      - name: "5.3 | AUDIT | Ensure login via 'local' UNIX Domain Socket is configured correctly"
+        ansible.builtin.debug:
+            msg:
+                - "Warning!! Please ensure logins via 'local' Unix Domain Socket is configured correctly. This is a manual task."
+                - "{{ pgs17cis_5_3_hba_local.stdout_lines }}"
+
+      - name: "5.3 | AUDIT | Ensure login via 'local' UNIX Domain Socket is configured correctly | Present"
+        ansible.builtin.import_tasks: warning_facts.yml
+  vars:
+      warn_control_id: '5.3'
+  when:
+      - pgs17cis_rule_5_3
+  tags:
+      - level1-postgresqlonlinux
+      - audit
+      - rule_5.3

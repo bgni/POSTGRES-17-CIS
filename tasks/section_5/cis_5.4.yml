@@ -1,0 +1,27 @@
+---
+
+- name: "5.4 | AUDIT | Ensure login via 'host' TCP/IP Socket is configured correctly"
+  block:
+      - name: "5.4 | AUDIT | Ensure login via 'host' TCP/IP Socket is configured correctly | Get entries from hba"
+        ansible.builtin.shell: "grep -E '^\\s*host[^s][^s][^l]' {{ pgs17cis_data_folder }}/pg_hba.conf | tr '\\t' '    '"
+        changed_when: false
+        failed_when: false
+        register: pgs17cis_5_3_hba_hostnossl
+
+      - name: "5.4 | AUDIT | Ensure login via 'host' TCP/IP Socket is configured correctly"
+        ansible.builtin.debug:
+            msg:
+                - "Warning!! Please ensure logins via 'host' TCP/IP Socket is configured correctly. This is a manual task."
+                - "These are the host entries in pg_hba that are unencrypted:"
+                - "{{ pgs17cis_5_3_hba_hostnossl.stdout_lines }}"
+
+      - name: "5.4 | AUDIT | Ensure login via 'host' TCP/IP Socket is configured correctly | Present"
+        ansible.builtin.import_tasks: warning_facts.yml
+  when:
+      - pgs17cis_rule_5_4
+  vars:
+      warn_control_id: 5.4
+  tags:
+      - level1-postgresqlonlinux
+      - audit
+      - rule_5.4

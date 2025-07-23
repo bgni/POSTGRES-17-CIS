@@ -1,7 +1,16 @@
 ---
 
-- name: "SECTION | 5.1 | Ensure login via 'local' UNIX Domain Socket is configured correctly"
-  ansible.builtin.import_tasks: cis_5.1.yml
-
-- name: "SECTION | 5.2 | Ensure login via 'host' TCP/IP Socket is configured correctly"
+- name: "SECTION | 5.2 | Ensure PostgreSQL is bound to an IP address"
   ansible.builtin.import_tasks: cis_5.2.yml
+
+- name: "SECTION | 5.3 | Ensure login via 'local' UNIX Domain Socket is configured correctly"
+  ansible.builtin.import_tasks: cis_5.3.yml
+
+- name: "SECTION | 5.4 | Ensure login via 'host' TCP/IP Socket is configured correctly"
+  ansible.builtin.import_tasks: cis_5.4.yml
+
+- name: "SECTION | 5.5 | Ensure per-account connection limits are used"
+  ansible.builtin.import_tasks: cis_5.5.yml
+
+- name: "SECTION | 5.6 | Ensure password complexity is configured"
+  ansible.builtin.import_tasks: cis_5.6.yml
