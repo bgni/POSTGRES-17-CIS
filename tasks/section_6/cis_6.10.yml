@@ -1,0 +1,33 @@
+---
+
+- name: "6.10 | AUDIT | Ensure weak SSL/TLS ciphers are is disabled"
+  block:
+      - name: "6.10 | AUDIT | Ensure weak SSL/TLS ciphers are is disabled | Get ssl param"
+        ansible.builtin.shell: "psql -t -c 'SHOW ssl_ciphers' | head -1|cut -c2-"
+        changed_when: false
+        failed_when: false
+        become: true
+        become_user: "{{ pgs17cis_pgs17_usr }}"
+        register: pgs17cis_6_10_show_ssl_ciphers
+
+      - name: "6.10 | AUDIT | Ensure weak SSL/TLS ciphers are is disabled | Check ssl configured"
+        ansible.builtin.debug:
+            msg:
+                - "Warning!! Ensure weak SSL/TLS ciphers are is disabled. This is a manual task."
+                - "Requested: '{{ pgs17cis_ssl_ciphers }}' Actual: '{{ pgs17cis_6_10_show_ssl_ciphers.stdout }}'"
+        when:
+            - "pgs17cis_ssl_ciphers not in pgs17cis_6_10_show_ssl_ciphers.stdout"
+
+      - name: "6.10 | AUDIT | Ensure weak SSL/TLS ciphers are is disabled | Present"
+        ansible.builtin.import_tasks: warning_facts.yml
+        when:
+            - "pgs17cis_ssl_ciphers not in pgs17cis_6_10_show_ssl_ciphers.stdout"
+  vars:
+      warn_control_id: '6.10'
+  when:
+      - pgs17cis_rule_6_10
+  tags:
+      - level1-postgresql
+      - level1-postgresqlonlinux
+      - audit
+      - rule_6.10

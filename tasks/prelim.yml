@@ -78,36 +78,12 @@
   when:
       - pgs17cis_rule_6_7
 
-- name: "PRELIM | 6.8 | Generate Self-Signed Cert"
+- name: "PRELIM | 6.11 | Install PostgreSQL contrib package"
   block:
-      - name: "PRELIM | 6.8 | Generate Self-Signed Cert | Check for existing cert"
-        ansible.builtin.find:
-            paths: "{{ pgs17cis_data_folder }}"
-            patterns: '*.crt,*.key'
-        become_user: "{{ pgs17cis_pgs17_usr }}"
-        register: pgs17cis_certs_status
-
-      - name: "PRELIM | 6.8 | Generate Self-Signed Cert | Create self-signed certificates"
-        ansible.builtin.shell: 'openssl req -new -x509 -days 365 -nodes -text -out {{ pgs17cis_data_folder }}/server.crt -keyout {{ pgs17cis_data_folder }}/server.key -subj "/CN={{ ansible_nodename }}"'
-        when: pgs17cis_certs_status.matched == 0
-
-      - name: "PRELIM | 6.8 | Generate Self-Signed Cert | Set permissions on key file"
-        file:
-            path: "{{ pgs17cis_data_folder }}/server.key"
-            mode: og-rwx
-            owner: "{{ pgs17cis_pgs17_usr }}"
-            group: "{{ pgs17cis_pgs17_usr }}"
-        when: pgs17cis_certs_status.matched == 0
-  when:
-      - pgs17cis_rule_6_8
-      - pgs17cis_create_selfsigned_cert
-
-- name: "PRELIM | 6.9 | Install PostgreSQL contrib package"
-  block:
-      - name: "PRELIM | 6.9 | Install PostgreSQL contrib package"
+      - name: "PRELIM | 6.11 | Install PostgreSQL contrib package"
         ansible.builtin.package:
             name: "{{ pgs17cis_pgspackage_prefix }}-contrib"
             state: present
         when: ansible_distribution_file_variety == 'RedHat'
   when:
-      - pgs17cis_rule_6_9 | default(false)
+      - pgs17cis_rule_6_11 | default(false)

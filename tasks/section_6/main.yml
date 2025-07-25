@@ -24,5 +24,11 @@
 - name: "SECTION | 6.8 | Ensure TLS is enabled and configured correctly"
   ansible.builtin.import_tasks: cis_6.8.yml
 
-- name: "SECTION | 6.9 | Ensure the pgcrypto extension is installed and configured correctly"
+- name: "SECTION | 6.9 | Ensure that TLSv1.3, or later, is configured"
   ansible.builtin.import_tasks: cis_6.9.yml
+
+- name: "SECTION | 6.10 | Ensure weak SSL/TLS ciphers are is disabled"
+  ansible.builtin.import_tasks: cis_6.10.yml
+
+- name: "SECTION | 6.11 | Ensure the pgcrypto extension is installed and configured correctly"
+  ansible.builtin.import_tasks: cis_6.11.yml

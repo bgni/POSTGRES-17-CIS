@@ -1,15 +1,33 @@
 ---
 
-- name: "6.9 | PATCH | Ensure the pgcrypto extension is installed and configured correctly"
-  ansible.builtin.shell: psql -c "CREATE EXTENSION pgcrypto;"
-  changed_when: "'CREATE' in pgs12cis_6_9_pgcrypto_status.stdout"
-  failed_when: false
-  register: pgs12cis_6_9_pgcrypto_status
-  become_user: "{{ pgs17cis_pgs17_usr }}"
+- name: "6.9 | AUDIT | Ensure that TLSv1.3, or later, is configured"
+  block:
+      - name: "6.9 | AUDIT | Ensure that TLSv1.3, or later, is configured | Get ssl param"
+        ansible.builtin.shell: "psql -t -c 'SHOW ssl_min_protocol_version' | head -1|cut -c2-"
+        changed_when: false
+        failed_when: false
+        become: true
+        become_user: "{{ pgs17cis_pgs17_usr }}"
+        register: pgs17cis_6_9_show_ssl_version
+
+      - name: "6.9 | AUDIT | Ensure that TLSv1.3, or later, is configured | Check ssl configured"
+        ansible.builtin.debug:
+            msg:
+                - "Warning!! Ensure that TLSv1.3, or later is configured. This is a manual task."
+                - "Requested: '{{ pgs17cis_ssl_min_protocol_version }}' Actual: '{{ pgs17cis_6_9_show_ssl_version.stdout }}'"
+        when:
+            - "pgs17cis_ssl_min_protocol_version not in pgs17cis_6_9_show_ssl_version.stdout"
+
+      - name: "6.9 | AUDIT | Ensure that TLSv1.3, or later, is configured | Present"
+        ansible.builtin.import_tasks: warning_facts.yml
+        when:
+            - "pgs17cis_ssl_min_protocol_version not in pgs17cis_6_9_show_ssl_version.stdout"
+  vars:
+      warn_control_id: '6.9'
   when:
-      - pgs12cis_rule_6_9
+      - pgs17cis_rule_6_9
   tags:
       - level1-postgresql
       - level1-postgresqlonlinux
-      - patch
+      - audit
       - rule_6.9

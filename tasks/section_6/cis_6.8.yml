@@ -1,21 +1,43 @@
 ---
 
 - name: "6.8 | PATCH | Ensure TLS is enabled and configured correctly"
-  ansible.builtin.lineinfile:
-      path: "{{ pgs12cis_config_file }}"
-      regexp: "{{ item.regexp }}"
-      line: "{{ item.line }}"
-      insertafter: "{{ item.insertafter }}"
-  notify: restart postgresql
-  with_items:
-      - { regexp: '^ssl =|^#ssl =', line: 'ssl = on', insertafter: '# - SSL -' }
-      - { regexp: '^ssl_ciphers =| ssl_ciphers =', line: "ssl_ciphers = '{{ pgs12cis_ssl_ciphers }}'", insertafter: 'ssl = on' }
-      - { regexp: '^ssl_cert_file =|^#ssl_cert_file =', line: "ssl_cert_file = '{{ pgs12cis_ssl_cert_file }}'", insertafter: 'ssl = on' }
-      - { regexp: '^ssl_key_file =|ssl_key_file =', line: "ssl_key_file = '{{ pgs12cis_ssl_key_file }}'", insertafter: 'ssl = on' }
-      - { regexp: '^password_encryption =|^#password_encryption =', line: 'password_encryption = {{ pgs12cis_password_encryption }}', insertafter: 'ssl = on' }
-      - { regexp: '^ssl_min_protocol_version =|^#ssl_min_protocol_version =', line: 'ssl_min_protocol_version = {{ pgs12cis_ssl_min_protocol_version }}', insertafter: 'ssl = on' }
+  block:
+      - name: "6.8 | AUDIT | Ensure TLS is enabled and configured correctly | Get ssl param"
+        ansible.builtin.shell: "psql -t -c 'SHOW ssl' | head -1|cut -c2-"
+        changed_when: false
+        failed_when: false
+        become: true
+        become_user: "{{ pgs17cis_pgs17_usr }}"
+        register: pgs17cis_6_8_show_ssl
+
+      - name: "6.8 | PATCH | Ensure TLS is enabled and configured correctly | Set min_protocol_version"
+        ansible.builtin.lineinfile:
+            path: "{{ pgs17cis_config_file }}"
+            regexp: "{{ item.regexp }}"
+            line: "{{ item.line }}"
+            insertafter: "{{ item.insertafter }}"
+        notify: restart postgresql
+        with_items:
+            - { regexp: '^ssl_min_protocol_version =|^#ssl_min_protocol_version =', line: 'ssl_min_protocol_version = {{ pgs17cis_ssl_min_protocol_version }}', insertafter: 'ssl = ' }
+        when: "'on' in pgs17cis_6_8_show_ssl"
+
+      - name: "6.8 | AUDIT | Ensure TLS is enabled and configured correctly | Check ssl configured"
+        ansible.builtin.debug:
+            msg:
+                - "Warning!! Ensure ssl is configured. This is a manual task."
+                - "Requested: 'on' Actual: '{{ pgs17cis_6_8_show_ssl.stdout }}'"
+        when:
+            - "'on' not in pgs17cis_6_8_show_ssl.stdout"
+
+      - name: "6.8 | AUDIT | Ensure TLS is enabled and configured correctly | Present"
+        ansible.builtin.import_tasks: warning_facts.yml
+        when:
+            - "'on' not in pgs17cis_6_8_show_ssl.stdout"
+
+  vars:
+      warn_control_id: '6.8'
   when:
-      - pgs12cis_rule_6_8
+      - pgs17cis_rule_6_8
   tags:
       - level1-postgresql
       - level1-postgresqlonlinux
