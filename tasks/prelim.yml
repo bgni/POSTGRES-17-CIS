@@ -87,3 +87,19 @@
         when: ansible_distribution_file_variety == 'RedHat'
   when:
       - pgs17cis_rule_6_11 | default(false)
+
+- name: "PRELIM | 7.1 | Find replication user name"
+  block:
+      - name: "PRELIM | 7.1 | Find replication user name | Scan pg_hba conf"
+        ansible.builtin.shell: "grep -E -e '^\\s*host.*\\sreplication\\s' {{ pgs17cis_data_folder }}/pg_hba.conf | awk '{ print $3 }' | grep -v all | sort -u"
+        changed_when: false
+        failed_when: false
+        register: pgs17cis_prelim_hba_repusers
+
+      - name: "PRELIM | 7.1 | Find replication user name | set_var"
+        ansible.builtin.set_fact:
+            pgs17cis_replication_user: "{{ pgs17cis_prelim_hba_repusers.stdout_lines[0] }}"
+        when:
+            - pgs17cis_prelim_hba_repusers.stdout_lines | length > 0
+  when:
+      - pgs17cis_rule_7_1 | default(false)

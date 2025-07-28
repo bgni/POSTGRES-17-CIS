@@ -1,16 +1,40 @@
 ---
 
 - name: "7.5 | AUDIT | Ensure streaming replication parameters are configured correctly"
-  ansible.builtin.debug:
-      msg:
-          - "Warning!! Please ensure streaming replication parameters are configured. This is a manual task."
+  block:
+      - name: "7.5 | AUDIT | Ensure streaming replication parameters are configured correctly | Get pg_is_in_recovery"
+        ansible.builtin.shell: "psql -t -c 'SELECT pg_is_in_recovery()' | head -1|cut -c2-"
+        changed_when: false
+        failed_when: false
+        become: true
+        become_user: "{{ pgs17cis_pgs17_usr }}"
+        register: pgs17cis_7_5_pg_is_in_recovery
 
-- name: "7.5 | AUDIT | Ensure streaming replication parameters are configured correctly | Present"
-  ansible.builtin.import_tasks: warning_facts.yml
+      - name: "7.5 | AUDIT | Ensure streaming replication parameters are configured correctly | Get pg_replication_slots_active"
+        ansible.builtin.shell: "psql -t -c 'select active from pg_replication_slots where active=\\'t\\'' | head -1|cut -c2-"
+        changed_when: false
+        failed_when: false
+        become: true
+        become_user: "{{ pgs17cis_pgs17_usr }}"
+        register: pgs17cis_7_5_pg_replication_slots
+
+      - name: "7.5 | AUDIT | Ensure streaming replication parameters are configured correctly | Print warning"
+        ansible.builtin.debug:
+            msg:
+                - "Warning!! Streaming replication should be active. This is a manual task."
+                - "Requested: pg_is_in_recovery: ('f' on master, 't' on slave) Actual: '{{ pgs17cis_7_5_pg_is_in_recovery.stdout }}'"
+                - "Requested: pg_replication_slots: (at least one 't' on master) Actual: '{{ pgs17cis_7_5_pg_replication_slots.stdout }}'"
+        when:
+            - "'f' in pgs17cis_7_5_pg_is_in_recovery.stdout and pgs17cis_7_5_pg_replication_slots.stdout | length < 1"
+
+      - name: "7.5 | AUDIT | Ensure streaming replication parameters are configured correctly | Present"
+        ansible.builtin.import_tasks: warning_facts.yml
+        when:
+            - "'f' in pgs17cis_7_5_pg_is_in_recovery.stdout and pgs17cis_7_5_pg_replication_slots.stdout | length < 1"
   vars:
       warn_control_id: '7.5'
   when:
-      - pgs12cis_rule_7_5
+      - pgs17cis_rule_7_5
   tags:
       - level1-postgresql
       - level1-postgresqlonlinux

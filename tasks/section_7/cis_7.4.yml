@@ -1,17 +1,41 @@
 ---
 
-- name: "7.4 | PATCH | Ensure WAL archiving is configured and functional"
-  ansible.builtin.lineinfile:
-      path: "{{ pgs12cis_config_file }}"
-      regexp: "{{ item.regexp }}"
-      line: "{{ item.line }}"
-  notify: restart postgresql
-  with_items:
-      - { regexp: '^archive_mode =|^#archive_mode =', line: 'archive_mode = on' }
-      - { regexp: '^archive_command =|^#archive_command =', line: "archive_command = '{{ pgs12cis_archive_command }}'" }
+- name: "7.4 | AUDIT | Ensure WAL archiving is configured and functional"
+  block:
+      - name: "7.4 | AUDIT | Ensure WAL archiving is configured and functional | Get parameter archive_mode"
+        ansible.builtin.shell: "psql -t -c 'SHOW archive_mode' | head -1|cut -c2-"
+        changed_when: false
+        failed_when: false
+        become: true
+        become_user: "{{ pgs17cis_pgs17_usr }}"
+        register: pgs17cis_7_4_show_archive_mode
+
+      - name: "7.4 | AUDIT | Ensure WAL archiving is configured and functional | Get parameter archive_command"
+        ansible.builtin.shell: "psql -t -c 'SHOW archive_command' | head -1|cut -c2-"
+        changed_when: false
+        failed_when: false
+        become: true
+        become_user: "{{ pgs17cis_pgs17_usr }}"
+        register: pgs17cis_7_4_show_archive_command
+
+      - name: "7.4 | AUDIT | Ensure WAL archiving is configured and functional | Print warning"
+        ansible.builtin.debug:
+            msg:
+                - "Warning!! A replication-only user should be created and used for streaming replication. This is a manual task."
+                - "Requested: archive_mode: (not off) Actual: '{{ pgs17cis_7_4_show_archive_mode.stdout }}'"
+                - "Requested: archive_command: (some command) Actual: '{{ pgs17cis_7_4_show_archive_command.stdout }}'"
+        when:
+            - "'off' in pgs17cis_7_4_show_archive_mode.stdout or pgs17cis_7_4_show_archive_command.stdout | length < 1 or 'true' in pgs17cis_7_4_show_archive_command.stdout"
+
+      - name: "7.4 | AUDIT | Ensure WAL archiving is configured and functional | Present"
+        ansible.builtin.import_tasks: warning_facts.yml
+        when:
+            - "'off' in pgs17cis_7_4_show_archive_mode.stdout or pgs17cis_7_4_show_archive_command.stdout | length < 1 or 'true' in pgs17cis_7_4_show_archive_command.stdout"
+  vars:
+      warn_control_id: '7.4'
   when:
-      - pgs12cis_rule_7_4
+      - pgs17cis_rule_7_4
   tags:
       - level1-postgresqlonlinux
-      - patch
+      - audit
       - rule_7.4

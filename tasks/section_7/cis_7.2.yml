@@ -2,12 +2,12 @@
 
 - name: "7.2 | AUDIT | Ensure logging of replication commands is configured"
   ansible.builtin.lineinfile:
-      path: "{{ pgs12cis_config_file }}"
+      path: "{{ pgs17cis_config_file }}"
       regexp: '^log_replication_commands =|^#log_replication_commands ='
-      line: "log_replication_commands = '{{ pgs12cis_log_replication_commands }}'"
+      line: "log_replication_commands = '{{ pgs17cis_log_replication_commands }}'"
   notify: restart postgresql
   when:
-      - pgs12cis_rule_7_2
+      - pgs17cis_rule_7_2
   tags:
       - level1-postgresql
       - level1-postgresqlonlinux
