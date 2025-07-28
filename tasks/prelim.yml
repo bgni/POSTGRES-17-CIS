@@ -29,10 +29,6 @@
   become_user: "{{ pgs17cis_pgs17_usr }}"
   register: pgs17cis_hba_config_file_get
 
-- name: "PRELIM | Set variable for service name"
-  ansible.builtin.set_fact:
-      pgs17cis_postgresql_service_auto: "{{ (ansible_os_family == 'Debian') | ternary('postgresql', 'postgresql-17') }}"
-
 - name: "PRELIM | 2.1 | Get postgresql user home folder"
   ansible.builtin.shell: "grep {{ pgs17cis_pgs17_usr }} /etc/passwd | cut -f6 -d:"
   changed_when: false

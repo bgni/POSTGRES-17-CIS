@@ -139,6 +139,9 @@ pgs17cis_boot_part: "{{ pgs17cis_prelim_boot_part.stdout }}"
 pgs17cis_machine_uses_uefi: "{{ pgs17cis_prelim_sys_firmware_efi.stat.exists }}"
 pgs17cis_grub_cfg_path: "{{ pgs17cis_machine_uses_uefi | ternary('/boot/efi/EFI/' ~ (ansible_distribution | lower) ~ '/grub.cfg', '/boot/grub2/grub.cfg') }}"
 
+# pgs17cis_pgspackage_prefix is the leading part of the packages name's
+pgs17cis_pgspackage_prefix: postgresql17
+
 # pgs17cis_postgresql_service is the name of the PostgreSQL service.
 # The name postgresql-17 is a general default for RHEL based systems and posgresql for Ubuntu based systems
 # but this allows for customization of service name if needed. There is a prelim task to set this automatically to the default name

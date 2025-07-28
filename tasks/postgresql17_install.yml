@@ -18,7 +18,7 @@
             name: [ "{{ pgs17cis_pgspackage_prefix }}", "{{ pgs17cis_pgspackage_prefix }}-server"]
             state: present
 
-      - name: "PRELIM | Install and Start PostgreSQL | Initialize PostgreSQL 12"
+      - name: "PRELIM | Install and Start PostgreSQL | Initialize PostgreSQL 17"
         ansible.builtin.shell: "{{ pgs17cis_pgspackage_bin_dir }}/postgresql-17-setup initdb"
         failed_when: false
 

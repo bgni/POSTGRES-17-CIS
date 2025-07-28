@@ -30,6 +30,14 @@
       - patch
       - rule_3.3
 
+- name: "3.1.4 | PATCH | Ensure the log file destination directory is set correctly | create dir"
+  ansible.builtin.file:
+      path: "{{ pgs17cis_log_directory }}"
+      mode: 0755
+      owner: "{{ pgs17cis_pgs17_usr }}"
+      group: "{{ pgs17cis_pgs17_usr }}"
+      state: directory
+
 - name: "3.1.4 | PATCH | Ensure the log file destination directory is set correctly"
   ansible.builtin.lineinfile:
       path: "{{ pgs17cis_config_file }}"
