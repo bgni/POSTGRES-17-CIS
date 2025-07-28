@@ -63,21 +63,6 @@
   when:
       - pgs17cis_rule_3_1_2
 
-- name: "PRELIM | 6.7 | Check if /boot or /boot/efi reside on separate partitions"
-  ansible.builtin.shell: df --output=target /boot | tail -n 1
-  changed_when: false
-  check_mode: false
-  register: pgs17cis_prelim_boot_part
-  when:
-      - pgs17cis_rule_6_7
-
-- name: "PRELIM | 6.7 | Check whether machine is UEFI-based"
-  ansible.builtin.stat:
-      path: /sys/firmware/efi
-  register: pgs17cis_prelim_sys_firmware_efi
-  when:
-      - pgs17cis_rule_6_7
-
 - name: "PRELIM | 6.11 | Install PostgreSQL contrib package"
   block:
       - name: "PRELIM | 6.11 | Install PostgreSQL contrib package"

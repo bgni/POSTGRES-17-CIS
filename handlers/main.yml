@@ -5,14 +5,6 @@
       name: "{{ pgs17cis_postgresql_service }}"
       state: restarted
 
-- name: rebuild initramfs
-  ansible.builtin.shell: dracut -f
-
-- name: make grub2 config
-  ansible.builtin.shell: /usr/sbin/grub2-mkconfig --output={{ pgs17cis_grub_cfg_path }}
-  when:
-      - not pgs17cis_system_is_container
-
 - name: reboot system
   ansible.builtin.shell: sleep 3; reboot
   async: 15
