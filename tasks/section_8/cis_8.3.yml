@@ -7,20 +7,33 @@
         changed_when: false
         failed_when: false
         become_user: "{{ pgs17cis_pgs17_usr }}"
-        register: pgs12cis_8_3_settings
+        register: pgs17cis_8_3_settings
+
+      - name: "8.3 | AUDIT | Ensure miscellaneous configuration settings are correct | Get libdir"
+        ansible.builtin.shell: "{{ pgs17cis_pgspackage_bin_dir }}/pg_config --libdir"
+        changed_when: false
+        failed_when: false
+        register: pgs17cis_pgs17_libdir_get
+
+      - name: "8.3 | AUDIT | Ensure miscellaneous configuration settings are correct | Get libdir"
+        ansible.builtin.shell: "ls -ld {{ pgs17cis_pgs17_libdir_get.stdout }} | awk '{ print $1 , $3 , $4 }'"
+        changed_when: false
+        failed_when: false
+        register: pgs17cis_pgs17_libdir_permissions
 
       - name: "8.3 | AUDIT | Ensure miscellaneous configuration settings are correct | Display settings"
         ansible.builtin.debug:
             msg:
                 - "Warning!! Please review the settings to confirm permissions are based on organization's policies. This is a manual task."
-                - "{{ pgs12cis_8_3_settings.stdout_lines }}"
+                - "{{ pgs17cis_8_3_settings.stdout_lines }}"
+                - "$libdir is {{ pgs17cis_pgs17_libdir_get.stdout }} and its permissions are '{{ pgs17cis_pgs17_libdir_permissions.stdout }}'"
 
       - name: "8.3 | AUDIT | Ensure miscellaneous configuration settings are correct | Present"
         ansible.builtin.import_tasks: warning_facts.yml
   vars:
       warn_control_id: '8.3'
   when:
-      - pgs12cis_rule_8_3
+      - pgs17cis_rule_8_3
   tags:
       - level1-postgresql
       - level1-postgresqlonlinux

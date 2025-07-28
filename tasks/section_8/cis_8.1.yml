@@ -7,7 +7,7 @@
         changed_when: false
         failed_when: false
         become_user: "{{ pgs17cis_pgs17_usr }}"
-        register: pgs12cis_8_1_directory_settings
+        register: pgs17cis_8_1_directory_settings
 
       - name: "8.1 | AUDIT | Ensure PostgreSQL subdirectory locations are outside the data cluster | Display settings"
         ansible.builtin.debug:
@@ -15,14 +15,14 @@
                 - "Warning!! Please inspect the file and directory permissions for all returned values."
                 - "Only superusers and authorized users should have access control"
                 - "rights for these files and directories. This is a manual task."
-                - "{{ pgs12cis_8_1_directory_settings.stdout_lines }}"
+                - "{{ pgs17cis_8_1_directory_settings.stdout_lines }}"
 
       - name: "8.1 | AUDIT | Ensure PostgreSQL subdirectory locations are outside the data cluster | Present"
         ansible.builtin.import_tasks: warning_facts.yml
   vars:
       warn_control_id: '8.1'
   when:
-      - pgs12cis_rule_8_1
+      - pgs17cis_rule_8_1
   tags:
       - level1-postgresql
       - level1-postgresqlonlinux
