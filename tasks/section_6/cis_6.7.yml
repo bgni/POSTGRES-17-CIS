@@ -14,7 +14,7 @@
         failed_when: false
         register: pgs17cis_6_7_fips_check
 
-      - name: "6.7 | PATCH | Ensure FIPS 140-2 OpenSSL Cryptography Is Used | Set FIPS enabled RHEL8"
+      - name: "6.7 | PATCH | Ensure FIPS 140-2 OpenSSL Cryptography Is Used | Set FIPS enabled RHEL8+"
         ansible.builtin.shell: fips-mode-setup --enable
         notify: reboot system
         when:
@@ -30,6 +30,7 @@
 
       - name: "6.7 | AUDIT | Ensure FIPS 140-2 OpenSSL Cryptography Is Used | Present"
         ansible.builtin.import_tasks: warning_facts.yml
+        when: "'enabled' not in pgs17cis_fips_check.stdout"
         vars:
             warn_control_id: '6.7'
   when:
