@@ -6,8 +6,7 @@
   gather_facts: true
   vars:
     pgs17cis_install_postgresql: true
-    # Fixed throwaway hash for the ephemeral container's operating-system user.
-    pgs17cis_postgres_user_pw: "$6$pg17cistest$xJkhMzHkJQ5tENPZRmDCATCCCNUzJvgmAXAzugaXWPOSbHxxQ5AzuJPQFDNzAVgSK7kPQNG18nTdoLY0VSNPi1"
+    pgs17cis_manage_postgres_os_password: false
     pgs17cis_section1: false
     pgs17cis_section2: false
     pgs17cis_section3: false
