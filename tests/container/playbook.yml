@@ -1,0 +1,40 @@
+---
+- name: Test PostgreSQL 17 replication controls on RHEL 9
+  hosts: all
+  connection: local
+  become: true
+  gather_facts: true
+  vars:
+    pgs17cis_install_postgresql: true
+    pgs17cis_postgres_user_pw: "!"
+    pgs17cis_section1: false
+    pgs17cis_section2: false
+    pgs17cis_section3: false
+    pgs17cis_section4: false
+    pgs17cis_section5: false
+    pgs17cis_section6: false
+    pgs17cis_section7: true
+    pgs17cis_section8: false
+  roles:
+    - role: /workspace
+  post_tasks:
+    - name: Apply notified PostgreSQL restart before verification
+      ansible.builtin.meta: flush_handlers
+
+    - name: Read PostgreSQL server version
+      ansible.builtin.command: psql -At -d postgres -c "SHOW server_version"
+      become_user: postgres
+      changed_when: false
+      register: postgres_server_version
+
+    - name: Read replication command logging setting
+      ansible.builtin.command: psql -At -d postgres -c "SHOW log_replication_commands"
+      become_user: postgres
+      changed_when: false
+      register: postgres_log_replication_commands
+
+    - name: Verify PostgreSQL 17 replication controls
+      ansible.builtin.assert:
+        that:
+          - postgres_server_version.stdout is match('^17\\.')
+          - postgres_log_replication_commands.stdout == 'on'

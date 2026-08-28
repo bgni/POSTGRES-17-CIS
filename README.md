@@ -104,6 +104,27 @@ Further details can be seen in the [Changelog](./ChangeLog.md)
   - jmespath ( complete list found in [requirements](./requirements.txt) )
 - collections found in collections/requirements.yml
 
+## Local PostgreSQL 17 container test
+
+The focused container test installs PostgreSQL 17 on Red Hat UBI Init 9.7,
+runs the Section 7 replication controls, and verifies the server version and
+`log_replication_commands` setting. Run it with Docker or Podman:
+
+```sh
+make test-docker
+make clean-container
+
+make test-podman
+make clean-container CONTAINER_ENGINE=podman
+```
+
+The test needs a rootful container engine because the target container runs
+systemd. UBI 9.7 supplies RHEL 9.7-compatible user space; set
+`RHEL_BASE_IMAGE` to an internal RHEL 9.7 image to test the exact production
+base. This focused test intentionally does not run the unrelated FIPS and
+full-system hardening controls, and it does not replace VM coverage for
+storage, SELinux, firewalld, reboot, or multi-node replication behavior.
+
 ## Role Variables
 
 This role is designed that the end user should not have to edit the tasks themselves. All customizing should be done by overriding the required variables as found in defaults/main.yml file. e.g. using inventory, group_vars, extra_vars

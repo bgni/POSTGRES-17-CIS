@@ -1,0 +1,16 @@
+services:
+  postgres17:
+    privileged: true
+    build:
+      context: ../..
+      dockerfile: tests/container/Containerfile
+      args:
+        ANSIBLE_CORE_VERSION: "${ANSIBLE_CORE_VERSION:-2.15.13}"
+        RHEL_BASE_IMAGE: "${RHEL_BASE_IMAGE:-registry.access.redhat.com/ubi9/ubi-init:9.7}"
+    volumes:
+      - ../..:/workspace:Z
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    tmpfs:
+      - /run
+      - /tmp
+    command: /sbin/init

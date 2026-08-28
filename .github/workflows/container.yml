@@ -1,0 +1,17 @@
+---
+name: PostgreSQL 17 container test
+
+on:  # yamllint disable-line rule:truthy
+  push:
+  pull_request:
+
+jobs:
+  replication-controls:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run PostgreSQL 17 replication controls on UBI 9.7
+        run: make test-docker
+      - name: Remove test containers
+        if: always()
+        run: make clean-container
