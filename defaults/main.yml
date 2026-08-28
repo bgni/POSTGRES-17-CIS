@@ -143,9 +143,9 @@ pgs17cis_grub_cfg_path: "{{ pgs17cis_machine_uses_uefi | ternary('/boot/efi/EFI/
 pgs17cis_pgspackage_prefix: postgresql17
 
 # pgs17cis_postgresql_service is the name of the PostgreSQL service.
-# The name postgresql-17 is a general default for RHEL based systems and posgresql for Ubuntu based systems
-# but this allows for customization of service name if needed. There is a prelim task to set this automatically to the default name
-pgs17cis_postgresql_service: "{{ pgs17cis_postgresql_service_auto }}"
+# The name postgresql-17 is a general default for RHEL based systems and postgresql for Ubuntu based systems
+# but this allows for customization of service name if needed.
+pgs17cis_postgresql_service: "{{ (ansible_os_family == 'Debian') | ternary('postgresql', 'postgresql-17') }}"
 
 # This is where the postgresql package installed binaries
 pgs17cis_pgspackage_bin_dir: "/usr/pgsql-17/bin"
