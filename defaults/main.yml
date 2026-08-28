@@ -123,6 +123,9 @@ pgs17cis_pgs17_usr: postgres
 # DO NOT USE PASSWORDS IN PLAIN TEXT
 # If you are using this role to initially install PostgreSQL 12 it is recommended to use a pw tool like vault
 pgs17cis_postgres_user_pw: letmein
+# Keep enabled for compatibility. Disable to preserve the package-created
+# operating-system service account password state.
+pgs17cis_manage_postgres_os_password: true
 
 # pgs17cis_pgs17_usr_home_dir is the home directory of the pgs17cis_pgs17_usr user directory
 pgs17cis_pgs17_usr_home_dir: "{{ pgs17cis_pgs17_usr_home_dir_get.stdout }}"
