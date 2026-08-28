@@ -8,10 +8,17 @@
             disable_gpg_check: "yes"
             state: present
 
+      - name: "PRELIM | Install and Start PostgreSQL | Check for built in PostgreSQL module RHEL"
+        ansible.builtin.command: dnf -q module list postgresql
+        register: prelim_postgresql_module
+        changed_when: false
+        failed_when: false
+
       - name: "PRELIM | Install and Start PostgreSQL | Disable built in PostgreSQL RHEL"
         ansible.builtin.shell: dnf -y module disable postgresql
         register: prelim_disable_pgs
         changed_when: "'Disabling modules' in prelim_disable_pgs.stdout"
+        when: prelim_postgresql_module.rc == 0
 
       - name: "PRELIM | Install and Start PostgreSQL | Install PostgreSQL 17 RHEL"
         ansible.builtin.package:
