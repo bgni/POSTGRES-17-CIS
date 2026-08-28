@@ -6,6 +6,9 @@ FROM ${RHEL_BASE_IMAGE}
 ARG ANSIBLE_CORE_VERSION=2.15.13
 ENV container=oci
 
+# Minimal UBI containers cannot complete the target-account PAM check used by
+# sudo. Permit it here so Ansible can become the postgres service account;
+# full PAM behavior remains VM-only coverage.
 RUN dnf -y install \
       acl \
       ca-certificates \
@@ -18,6 +21,7 @@ RUN dnf -y install \
       sudo \
       which \
     && python3 -m pip install --no-cache-dir "ansible-core==${ANSIBLE_CORE_VERSION}" \
+    && sed -ri 's/^account[[:space:]]+include[[:space:]]+system-auth$/account sufficient pam_permit.so/' /etc/pam.d/sudo \
     && dnf clean all
 
 STOPSIGNAL SIGRTMIN+3
